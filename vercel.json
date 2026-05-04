@@ -31,12 +31,5 @@
         { "key": "Cache-Control", "value": "public, max-age=86400" }
       ]
     }
-  ],
-  "rewrites": [
-    { "source": "/vs-openai-playground", "destination": "/pages/vs-openai-playground.html" },
-    { "source": "/compare-claude-vs-gpt", "destination": "/pages/compare-claude-vs-gpt.html" },
-    { "source": "/gemini-prompt-tester", "destination": "/pages/gemini-prompt-tester.html" },
-    { "source": "/how-to-compare-llm-outputs", "destination": "/pages/how-to-compare-llm-outputs.html" },
-    { "source": "/llm-prompt-playground", "destination": "/pages/llm-prompt-playground.html" }
   ]
 }
