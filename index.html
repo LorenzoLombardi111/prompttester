@@ -307,6 +307,60 @@
             border-color: var(--accent);
             box-shadow: 0 0 0 3px rgba(196,154,42,0.12);
         }
+        .selected-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            min-height: 40px;
+            align-items: center;
+        }
+        .selected-bar .selected-empty {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .selected-chip {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            background: var(--accent);
+            color: var(--accent-text);
+            border: none;
+            border-radius: 6px;
+            padding: 4px 6px 4px 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: default;
+            transition: all 0.15s ease;
+        }
+        .selected-chip .selected-chip-x {
+            background: rgba(255,255,255,0.2);
+            color: var(--accent-text);
+            border: none;
+            border-radius: 4px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            transition: background 0.15s ease;
+        }
+        .selected-chip .selected-chip-x:hover { background: rgba(255,255,255,0.4); }
+        .selected-chip .selected-chip-prov {
+            font-size: 10px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
         .model-grid {
             display: flex;
             flex-wrap: wrap;
@@ -896,6 +950,7 @@
             <span>Models <span class="panel-meta" id="modelCount">0 selected · max 6</span></span>
             <span class="panel-meta">Direct browser calls + OpenRouter for OpenAI</span>
         </div>
+        <div class="selected-bar" id="selectedBar"></div>
         <div class="model-section-tab" id="modelTabs"></div>
         <div class="model-search" id="modelSearch">
             <div class="model-filter-row">
@@ -1298,6 +1353,7 @@ async function loadOpenRouterModels() {
             })
             .sort((a, b) => a.label.localeCompare(b.label));
         if (State.activeTab === 'openrouter' || State.activeTab === 'all') renderModels();
+        renderSelectedBar();
     } catch {}
 }
 
@@ -1800,6 +1856,31 @@ function toggleModel(id) {
     }
     saveSelected();
     renderModels();
+    renderSelectedBar();
+}
+
+function renderSelectedBar() {
+    const bar = document.getElementById('selectedBar');
+    bar.innerHTML = '';
+    if (State.selected.length === 0) {
+        const empty = document.createElement('span');
+        empty.className = 'selected-empty';
+        empty.textContent = 'No models selected — pick from the tabs below.';
+        bar.appendChild(empty);
+        return;
+    }
+    for (const id of State.selected) {
+        const m = findModel(id);
+        const chip = document.createElement('span');
+        chip.className = 'selected-chip';
+        const label = m ? m.label : id;
+        const prov = m ? m.provider : '?';
+        chip.innerHTML = `<span>${label}</span><span class="selected-chip-prov">${prov}</span><button class="selected-chip-x" aria-label="Remove ${label}">×</button>`;
+        chip.querySelector('.selected-chip-x').addEventListener('click', () => {
+            toggleModel(id);
+        });
+        bar.appendChild(chip);
+    }
 }
 
 /* ============================================================
@@ -2167,6 +2248,7 @@ function clearAllOutputs() {
 (function init() {
     renderTabs();
     renderModels();
+    renderSelectedBar();
     updateKeyCount();
     restoreLastPrompt();
     updatePromptMeta();
