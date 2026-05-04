@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Compare LLM Outputs — freeprompttester.app</title>
+    <meta name="description" content="A practical guide to comparing LLM outputs across providers. Latency, tokens, cost and quality — what to measure and how, in your browser.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://freeprompttester.app/how-to-compare-llm-outputs">
+    <meta name="theme-color" content="#faf9f6">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="manifest" href="/manifest.json">
+
+    <meta property="og:title" content="How to Compare LLM Outputs — freeprompttester.app">
+    <meta property="og:description" content="A practical guide to comparing LLM outputs across providers. Latency, tokens, cost and quality — what to measure and how, in your browser.">
+    <meta property="og:image" content="https://freeprompttester.app/og-image.svg">
+    <meta property="og:url" content="https://freeprompttester.app/how-to-compare-llm-outputs">
+    <meta property="og:type" content="article">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="How to Compare LLM Outputs — freeprompttester.app">
+    <meta name="twitter:description" content="A practical guide to comparing LLM outputs across providers. Latency, tokens, cost and quality — what to measure and how, in your browser.">
+    <meta name="twitter:image" content="https://freeprompttester.app/og-image.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "How to Compare LLM Outputs — freeprompttester.app",
+        "description": "A practical guide to comparing LLM outputs across providers. Latency, tokens, cost and quality — what to measure and how, in your browser.",
+        "url": "https://freeprompttester.app/how-to-compare-llm-outputs",
+        "publisher": { "@type": "Organization", "name": "freeprompttester.app", "url": "https://freeprompttester.app/" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            { "@type": "Question", "name": "How many models should I compare at once?", "acceptedAnswer": { "@type": "Answer", "text": "Three to four is the sweet spot. freeprompttester.app supports up to six in parallel, but the grid gets busy beyond four on a typical laptop screen." } },
+            { "@type": "Question", "name": "Can I keep the same prompt and just swap models?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Edit the model selection chips and click Run again — the prompt, system prompt and parameters stay. The previous outputs stay too unless you click Clear." } },
+            { "@type": "Question", "name": "Do all providers report token usage the same way?", "acceptedAnswer": { "@type": "Answer", "text": "No. Anthropic reports input tokens at message_start and output at message_delta. Google returns usage in the final SSE chunk. OpenAI-compatible APIs (Mistral, DeepSeek, Groq, xAI, OpenRouter) include usage in the last data chunk if you set stream_options.include_usage. Cohere returns it in a message-end event. freeprompttester.app handles all of these." } },
+            { "@type": "Question", "name": "What if a provider is slow or unresponsive?", "acceptedAnswer": { "@type": "Answer", "text": "Each model has its own AbortController. The other cards stream normally; the slow one stays in \"Streaming\" state until it returns or you click its stop button." } },
+            { "@type": "Question", "name": "Why are some answers shorter than max_tokens?", "acceptedAnswer": { "@type": "Answer", "text": "max_tokens is a ceiling, not a target. Models stop when they think the response is complete (or hit a stop token). If a model is truncating early on your task, raise max_tokens; if it's overrunning, lower it." } },
+            { "@type": "Question", "name": "Can I save runs as fixtures or evals?", "acceptedAnswer": { "@type": "Answer", "text": "v1 supports copy-and-paste output. The Pro tier (named saved evaluations + scoring) is on the roadmap." } }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://freeprompttester.app/" },
+            { "@type": "ListItem", "position": 2, "name": "How to Compare LLM Outputs", "item": "https://freeprompttester.app/how-to-compare-llm-outputs" }
+        ]
+    }
+    </script>
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#faf9f6;--surface:#f4f2ee;--border:#e8e4dd;--text-primary:#1a1917;--text-secondary:#6b6760;--text-muted:#9e9b96;--accent:#C49A2A;--accent-hover:#A8831F;--accent-text:#fff;--shadow:0 1px 3px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);--font-body:'Lora',serif;--font-ui:'DM Sans',sans-serif}
+        html.dark{--bg:#141412;--surface:#1e1c1a;--border:#2e2b27;--text-primary:#f0ede8;--text-secondary:#9e9b96;--text-muted:#6b6760;--accent:#D4A835;--accent-hover:#C49A2A;--shadow:0 1px 3px rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.2)}
+        html{font-size:15px;line-height:1.6}
+        body{font-family:var(--font-body);background:var(--bg);color:var(--text-primary)}
+        .header{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:100}
+        .header-brand{font-family:var(--font-ui);font-size:15px;font-weight:600;color:var(--accent);text-decoration:none}
+        .theme-toggle{font-family:var(--font-ui);font-size:13px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 12px;cursor:pointer;color:var(--text-secondary);transition:all .15s ease}
+        .theme-toggle:hover{background:var(--border)}
+        .breadcrumb{font-family:var(--font-ui);font-size:12px;color:var(--text-muted);padding:12px 24px;max-width:800px;margin:0 auto}
+        .breadcrumb a{color:var(--accent);text-decoration:none}
+        .breadcrumb a:hover{text-decoration:underline}
+        .landing-content{max-width:800px;margin:0 auto;padding:32px 24px 64px}
+        .landing-content h1{font-size:32px;font-weight:700;margin-bottom:24px;line-height:1.3}
+        .landing-content h2{font-size:22px;font-weight:600;margin-top:32px;margin-bottom:12px}
+        .landing-content p{color:var(--text-secondary);margin-bottom:16px;line-height:1.7}
+        .landing-content ul,.landing-content ol{margin:0 0 16px 24px;color:var(--text-secondary)}
+        .landing-content li{margin-bottom:8px;line-height:1.7}
+        .landing-content code{font-family:'JetBrains Mono',monospace;font-size:13px;background:var(--surface);padding:1px 6px;border-radius:4px}
+        .comparison-table{width:100%;border-collapse:collapse;margin:24px 0;font-family:var(--font-ui);font-size:13px}
+        .comparison-table th{background:var(--surface);padding:12px 16px;text-align:left;font-weight:600;border-bottom:2px solid var(--border)}
+        .comparison-table td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-secondary)}
+        .comparison-table tr:hover td{background:var(--surface)}
+        .cta-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:32px;text-align:center;margin:32px 0}
+        .cta-box h3{font-family:var(--font-ui);font-size:18px;font-weight:600;margin-bottom:12px}
+        .cta-box p{color:var(--text-muted);margin-bottom:16px}
+        .cta-btn{font-family:var(--font-ui);font-size:15px;font-weight:600;background:var(--accent);color:var(--accent-text);border:none;border-radius:8px;padding:12px 24px;cursor:pointer;text-decoration:none;display:inline-block;transition:all .15s ease}
+        .cta-btn:hover{background:var(--accent-hover)}
+        details{border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:8px}
+        summary{font-family:var(--font-ui);font-weight:500;cursor:pointer;color:var(--text-primary)}
+        details p{margin-top:12px;margin-bottom:0;font-family:var(--font-ui);font-size:13px}
+        .related-tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:24px 0}
+        .related-tool-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:block;transition:all .15s ease}
+        .related-tool-card:hover{box-shadow:var(--shadow)}
+        .related-tool-card .tool-name{font-family:var(--font-ui);font-size:13px;font-weight:600;color:var(--accent)}
+        .related-tool-card .tool-desc{font-family:var(--font-ui);font-size:12px;color:var(--text-muted);margin-top:4px}
+        .landing-footer{text-align:center;padding:32px 24px;font-family:var(--font-ui);font-size:12px;color:var(--text-muted);border-top:1px solid var(--border)}
+        .suite-badge{position:fixed;bottom:16px;right:16px;font-family:var(--font-ui);font-size:11px;color:var(--text-muted);text-decoration:none}
+        @media (max-width:768px){.landing-content h1{font-size:24px}.landing-content{padding:24px 16px 48px}.comparison-table{font-size:12px}.suite-badge .badge-prefix{display:none}.related-tools{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="/" class="header-brand">freeprompttester.app</a>
+        <button class="theme-toggle">☀️</button>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="/">Home</a> › How to Compare LLM Outputs
+    </nav>
+
+    <article class="landing-content">
+        <h1>How to Compare LLM Outputs Across Providers</h1>
+
+        <p>Most LLM benchmarks tell you how a model performed on someone else's prompts. The only benchmark that matters for your project is how each model handles your prompts. freeprompttester.app is a free browser tool for running side-by-side LLM comparisons — same prompt, multiple providers, parallel streamed responses with latency, token usage and per-call cost shown live. Here is the practical workflow.</p>
+
+        <h2>What to measure when comparing LLM outputs</h2>
+        <ul>
+            <li><strong>Output quality</strong> — judged on your task. Have a clear definition: is shorter better, is structured output better, does factual accuracy matter more than tone?</li>
+            <li><strong>Time-to-first-token (TTFT)</strong> — for interactive UIs, this is what users feel as "fast" or "slow." freeprompttester.app shows TTFT next to total latency on every card.</li>
+            <li><strong>Total latency</strong> — for batch jobs and one-shot tasks where the user waits for the complete response.</li>
+            <li><strong>Tokens out / tokens in</strong> — terse outputs are cheaper and often clearer. Two equally good responses where one uses half the output tokens means half the cost.</li>
+            <li><strong>Cost per call</strong> — input tokens × per-million input rate + output tokens × per-million output rate. freeprompttester.app computes this from each provider's reported usage.</li>
+            <li><strong>Variance</strong> — temperature > 0 means the same prompt gives different answers each time. Run each model twice or three times to see how much variance you're getting.</li>
+        </ul>
+
+        <h2>Step-by-step: a fair comparison in freeprompttester.app</h2>
+        <ol>
+            <li><strong>Pick a representative prompt.</strong> One that mirrors what your production traffic will look like. A toy prompt is useless for benchmarking.</li>
+            <li><strong>Set the same parameters across providers.</strong> freeprompttester.app applies your temperature, max-tokens and top-p settings to every selected model so the variables are controlled. Some providers (e.g. Mistral) clamp temperature ranges; that's automatic.</li>
+            <li><strong>Pick at least three models.</strong> Two-way comparisons are noisy. Three or four reveal the real spread.</li>
+            <li><strong>Hit Run, watch them stream in parallel.</strong> Note the TTFT differences while you wait — these aren't measurable from raw output alone.</li>
+            <li><strong>Re-run two or three times.</strong> Hit the regenerate button on each card to see variance with the same prompt and parameters.</li>
+            <li><strong>Score them.</strong> A blind paste-into-Notion-and-rank works fine for casual eval. For rigorous eval, the upcoming Pro tier supports rubric scoring and history.</li>
+        </ol>
+
+        <h2>What freeprompttester.app does for you under the hood</h2>
+        <p>freeprompttester.app fans out parallel <code>fetch()</code> calls to each provider's chat completion endpoint as soon as you click Run. Each provider streams its response back; the page parses each provider's SSE format (Anthropic, Google, OpenAI/OpenRouter, Cohere all differ slightly), extracts content tokens and usage metadata, and updates each card live. Cost is computed from the usage metadata × the provider's published per-million rates as soon as it arrives. Stop buttons abort with <code>AbortController</code> so cancelled calls don't get billed.</p>
+
+        <h2>Common pitfalls to avoid</h2>
+        <p>Don't compare a tuned prompt for one model against an untuned one for another — that measures your prompt-engineering effort, not the models. Don't compare across temperatures: temperature 0.2 vs 0.9 will dwarf any model-quality difference. Don't draw conclusions from one run; LLMs are stochastic. And don't over-rely on benchmarks that aren't your task — coding benchmarks predict coding ability, but not how a model handles your customer support tone.</p>
+
+        <div class="cta-box">
+            <h3>Try freeprompttester.app — Free, No Sign-Up</h3>
+            <p>Bring your own API keys. Up to six models in parallel. Streams in your browser.</p>
+            <a href="/" class="cta-btn">Open AI Prompt Tester →</a>
+        </div>
+
+        <h2>Frequently Asked Questions</h2>
+        <details><summary>How many models should I compare at once?</summary><p>Three to four is the sweet spot. freeprompttester.app supports up to six in parallel, but the grid gets busy beyond four on a typical laptop screen.</p></details>
+        <details><summary>Can I keep the same prompt and just swap models?</summary><p>Yes. Edit the model selection chips and click Run again — the prompt, system prompt and parameters stay. The previous outputs stay too unless you click Clear.</p></details>
+        <details><summary>Do all providers report token usage the same way?</summary><p>No. Anthropic reports input tokens at message_start and output at message_delta. Google returns usage in the final SSE chunk. OpenAI-compatible APIs (Mistral, DeepSeek, Groq, xAI, OpenRouter) include usage in the last data chunk if you set stream_options.include_usage. Cohere returns it in a message-end event. freeprompttester.app handles all of these.</p></details>
+        <details><summary>What if a provider is slow or unresponsive?</summary><p>Each model has its own AbortController. The other cards stream normally; the slow one stays in "Streaming" state until it returns or you click its stop button.</p></details>
+        <details><summary>Why are some answers shorter than max_tokens?</summary><p>max_tokens is a ceiling, not a target. Models stop when they think the response is complete (or hit a stop token). If a model is truncating early on your task, raise max_tokens; if it's overrunning, lower it.</p></details>
+        <details><summary>Can I save runs as fixtures or evals?</summary><p>v1 supports copy-and-paste output. The Pro tier (named saved evaluations + scoring) is on the roadmap.</p></details>
+
+        <h2>More Free Tools from Freesuite</h2>
+        <div class="related-tools">
+            <a href="https://freetokencounter.app" class="related-tool-card"><div class="tool-name">freetokencounter.app</div><div class="tool-desc">Live token count for 100+ AI models</div></a>
+            <a href="https://freejsonformatter.app" class="related-tool-card"><div class="tool-name">freejsonformatter.app</div><div class="tool-desc">JSON formatter & validator</div></a>
+            <a href="https://freecsv2json.app" class="related-tool-card"><div class="tool-name">freecsv2json.app</div><div class="tool-desc">Bidirectional CSV ↔ JSON</div></a>
+            <a href="https://freeregextester.app" class="related-tool-card"><div class="tool-name">freeregextester.app</div><div class="tool-desc">Live regex tester</div></a>
+            <a href="https://freediffchecker.app" class="related-tool-card"><div class="tool-name">freediffchecker.app</div><div class="tool-desc">Side-by-side diff</div></a>
+            <a href="https://freebase64.app" class="related-tool-card"><div class="tool-name">freebase64.app</div><div class="tool-desc">Base64 encode/decode</div></a>
+        </div>
+    </article>
+    <footer class="landing-footer">
+        &copy; freeprompttester.app
+    </footer>
+    <a href="https://freesuite.app" class="suite-badge" target="_blank" rel="noopener"><span class="badge-prefix">by </span>freesuite.app</a>
+    <script>
+    (()=>{const t=document.querySelector('.theme-toggle');const g=()=>localStorage.getItem('suite_theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');const a=v=>{document.documentElement.classList.toggle('dark',v==='dark');t.textContent=v==='dark'?'🌙':'☀️';localStorage.setItem('suite_theme',v)};a(g());t.addEventListener('click',()=>a(document.documentElement.classList.contains('dark')?'light':'dark'))})();
+    </script>
+</body>
+</html>

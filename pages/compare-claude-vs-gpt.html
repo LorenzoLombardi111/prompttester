@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compare Claude vs GPT — freeprompttester.app</title>
+    <meta name="description" content="Run the same prompt against Claude Opus 4.7 and GPT-5 side by side in your browser. See output, latency, tokens and cost — free.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://freeprompttester.app/compare-claude-vs-gpt">
+    <meta name="theme-color" content="#faf9f6">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="manifest" href="/manifest.json">
+
+    <meta property="og:title" content="Compare Claude vs GPT — freeprompttester.app">
+    <meta property="og:description" content="Run the same prompt against Claude Opus 4.7 and GPT-5 side by side in your browser. See output, latency, tokens and cost — free.">
+    <meta property="og:image" content="https://freeprompttester.app/og-image.svg">
+    <meta property="og:url" content="https://freeprompttester.app/compare-claude-vs-gpt">
+    <meta property="og:type" content="article">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Compare Claude vs GPT — freeprompttester.app">
+    <meta name="twitter:description" content="Run the same prompt against Claude Opus 4.7 and GPT-5 side by side in your browser. See output, latency, tokens and cost — free.">
+    <meta name="twitter:image" content="https://freeprompttester.app/og-image.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "headline": "Compare Claude vs GPT — freeprompttester.app",
+        "description": "Run the same prompt against Claude Opus 4.7 and GPT-5 side by side in your browser. See output, latency, tokens and cost — free.",
+        "url": "https://freeprompttester.app/compare-claude-vs-gpt",
+        "publisher": { "@type": "Organization", "name": "freeprompttester.app", "url": "https://freeprompttester.app/" }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            { "@type": "Question", "name": "Why does freeprompttester.app use OpenRouter for GPT?", "acceptedAnswer": { "@type": "Answer", "text": "OpenAI's API blocks direct browser calls. OpenRouter is a paid relay that does allow browser calls and exposes GPT-5, GPT-5 mini, GPT-4.1 and o4-mini through a single key. It keeps freeprompttester.app fully serverless." } },
+            { "@type": "Question", "name": "Is the cost shown per card accurate?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. After each call, the provider returns the exact input and output token counts (in the streaming usage metadata for OpenRouter, in the message usage object for Anthropic). freeprompttester.app multiplies those by the model's published per-million rates." } },
+            { "@type": "Question", "name": "Can I save the comparison?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Click the copy icon on each card to copy individual outputs, or use Clear and re-run. JSON export of full runs is on the roadmap." } },
+            { "@type": "Question", "name": "How many models can I compare at once?", "acceptedAnswer": { "@type": "Answer", "text": "Up to six per run. The grid stays readable at six on desktop; mobile stacks them into a single column." } },
+            { "@type": "Question", "name": "Are my keys safe?", "acceptedAnswer": { "@type": "Answer", "text": "Keys live in your browser localStorage. They are sent only directly to each provider — never to a Freesuite server. Anyone with access to your browser can read them, so do not enter keys on shared computers." } },
+            { "@type": "Question", "name": "What if I only want to test Claude or only GPT?", "acceptedAnswer": { "@type": "Answer", "text": "Pick just that one model from the picker. freeprompttester.app works as a single-model playground too." } }
+        ]
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://freeprompttester.app/" },
+            { "@type": "ListItem", "position": 2, "name": "Claude vs GPT", "item": "https://freeprompttester.app/compare-claude-vs-gpt" }
+        ]
+    }
+    </script>
+    <style>
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#faf9f6;--surface:#f4f2ee;--border:#e8e4dd;--text-primary:#1a1917;--text-secondary:#6b6760;--text-muted:#9e9b96;--accent:#C49A2A;--accent-hover:#A8831F;--accent-text:#fff;--shadow:0 1px 3px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.04);--font-body:'Lora',serif;--font-ui:'DM Sans',sans-serif}
+        html.dark{--bg:#141412;--surface:#1e1c1a;--border:#2e2b27;--text-primary:#f0ede8;--text-secondary:#9e9b96;--text-muted:#6b6760;--accent:#D4A835;--accent-hover:#C49A2A;--shadow:0 1px 3px rgba(0,0,0,.3),0 2px 8px rgba(0,0,0,.2)}
+        html{font-size:15px;line-height:1.6}
+        body{font-family:var(--font-body);background:var(--bg);color:var(--text-primary)}
+        .header{height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:100}
+        .header-brand{font-family:var(--font-ui);font-size:15px;font-weight:600;color:var(--accent);text-decoration:none}
+        .theme-toggle{font-family:var(--font-ui);font-size:13px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:6px 12px;cursor:pointer;color:var(--text-secondary);transition:all .15s ease}
+        .theme-toggle:hover{background:var(--border)}
+        .breadcrumb{font-family:var(--font-ui);font-size:12px;color:var(--text-muted);padding:12px 24px;max-width:800px;margin:0 auto}
+        .breadcrumb a{color:var(--accent);text-decoration:none}
+        .breadcrumb a:hover{text-decoration:underline}
+        .landing-content{max-width:800px;margin:0 auto;padding:32px 24px 64px}
+        .landing-content h1{font-size:32px;font-weight:700;margin-bottom:24px;line-height:1.3}
+        .landing-content h2{font-size:22px;font-weight:600;margin-top:32px;margin-bottom:12px}
+        .landing-content p{color:var(--text-secondary);margin-bottom:16px;line-height:1.7}
+        .landing-content ul,.landing-content ol{margin:0 0 16px 24px;color:var(--text-secondary)}
+        .landing-content li{margin-bottom:8px;line-height:1.7}
+        .landing-content code{font-family:'JetBrains Mono',monospace;font-size:13px;background:var(--surface);padding:1px 6px;border-radius:4px}
+        .comparison-table{width:100%;border-collapse:collapse;margin:24px 0;font-family:var(--font-ui);font-size:13px}
+        .comparison-table th{background:var(--surface);padding:12px 16px;text-align:left;font-weight:600;border-bottom:2px solid var(--border)}
+        .comparison-table td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-secondary)}
+        .comparison-table tr:hover td{background:var(--surface)}
+        .cta-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:32px;text-align:center;margin:32px 0}
+        .cta-box h3{font-family:var(--font-ui);font-size:18px;font-weight:600;margin-bottom:12px}
+        .cta-box p{color:var(--text-muted);margin-bottom:16px}
+        .cta-btn{font-family:var(--font-ui);font-size:15px;font-weight:600;background:var(--accent);color:var(--accent-text);border:none;border-radius:8px;padding:12px 24px;cursor:pointer;text-decoration:none;display:inline-block;transition:all .15s ease}
+        .cta-btn:hover{background:var(--accent-hover)}
+        details{border:1px solid var(--border);border-radius:8px;padding:16px;margin-bottom:8px}
+        summary{font-family:var(--font-ui);font-weight:500;cursor:pointer;color:var(--text-primary)}
+        details p{margin-top:12px;margin-bottom:0;font-family:var(--font-ui);font-size:13px}
+        .related-tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin:24px 0}
+        .related-tool-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-decoration:none;display:block;transition:all .15s ease}
+        .related-tool-card:hover{box-shadow:var(--shadow)}
+        .related-tool-card .tool-name{font-family:var(--font-ui);font-size:13px;font-weight:600;color:var(--accent)}
+        .related-tool-card .tool-desc{font-family:var(--font-ui);font-size:12px;color:var(--text-muted);margin-top:4px}
+        .landing-footer{text-align:center;padding:32px 24px;font-family:var(--font-ui);font-size:12px;color:var(--text-muted);border-top:1px solid var(--border)}
+        .suite-badge{position:fixed;bottom:16px;right:16px;font-family:var(--font-ui);font-size:11px;color:var(--text-muted);text-decoration:none}
+        @media (max-width:768px){.landing-content h1{font-size:24px}.landing-content{padding:24px 16px 48px}.comparison-table{font-size:12px}.suite-badge .badge-prefix{display:none}.related-tools{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <a href="/" class="header-brand">freeprompttester.app</a>
+        <button class="theme-toggle">☀️</button>
+    </header>
+
+    <nav class="breadcrumb">
+        <a href="/">Home</a> › Claude vs GPT
+    </nav>
+
+    <article class="landing-content">
+        <h1>Compare Claude vs GPT Side by Side — Live Output, Latency, Tokens, Cost</h1>
+
+        <p>Choosing between Claude and GPT for a workload is rarely a single-axis decision. One model writes more concisely; the other reasons through edge cases more reliably; one is cheaper at high volume; the other is faster to first token. The only honest way to pick is to run your own representative prompts against both and read the outputs side by side. freeprompttester.app makes that a one-click comparison: paste your Anthropic key, paste an OpenRouter key (which gives you GPT-5), pick Claude Opus 4.7 and GPT-5 from the model picker, hit Run, and watch both stream into adjacent cards with TTFT, total latency, input/output tokens and per-call cost shown live.</p>
+
+        <h2>Claude Opus 4.7 vs GPT-5 — at a glance</h2>
+        <table class="comparison-table">
+            <thead><tr><th>Spec</th><th>Claude Opus 4.7</th><th>GPT-5 (via OpenRouter)</th></tr></thead>
+            <tbody>
+                <tr><td>Context window</td><td>1,000,000 tokens</td><td>400,000 tokens</td></tr>
+                <tr><td>Input price</td><td>$15 per 1M</td><td>$1.25 per 1M</td></tr>
+                <tr><td>Output price</td><td>$75 per 1M</td><td>$10 per 1M</td></tr>
+                <tr><td>Strengths</td><td>Long-context reasoning, code review, careful analysis</td><td>Speed, broad world knowledge, instruction following</td></tr>
+                <tr><td>Direct browser call</td><td>Yes</td><td>No — via OpenRouter</td></tr>
+            </tbody>
+        </table>
+        <p style="font-size:12px;color:var(--text-muted)">Pricing as of 2026-05. Always verify with each provider.</p>
+
+        <h2>How to compare Claude and GPT with freeprompttester.app</h2>
+        <ol>
+            <li>Open freeprompttester.app and click <strong>API keys</strong> in the header.</li>
+            <li>Paste your Anthropic key (<code>sk-ant-…</code>) and your OpenRouter key (<code>sk-or-…</code>). Click "Test" on each row to verify.</li>
+            <li>Write a system prompt (optional) and the user prompt you want to test.</li>
+            <li>In the Models panel, switch to the <strong>Popular</strong> tab and click both <em>Claude Opus 4.7</em> and <em>GPT-5 (OpenRouter)</em>.</li>
+            <li>Hit <strong>Run</strong>. Both cards stream simultaneously. Read the outputs, compare TTFT and cost.</li>
+        </ol>
+
+        <h2>What to actually compare</h2>
+        <p>Don't just read the answers. Look at:</p>
+        <ul>
+            <li><strong>TTFT</strong> — time-to-first-token. If you're building chat UI, this matters more than total latency. GPT-5 typically lands faster on the first token; Claude Opus often catches up on long generations.</li>
+            <li><strong>Tokens out</strong> — terser is usually better. If two answers are equally good but one uses half the tokens, that one is also half the cost.</li>
+            <li><strong>Cost per call</strong> — shown in the card footer. Multiply by your volume to see whether the more expensive model justifies itself.</li>
+            <li><strong>Output quality</strong> — judged by you, on your prompt, in your domain. That's the whole point.</li>
+        </ul>
+
+        <h2>Tips for fair comparisons</h2>
+        <p>Use the same temperature and max-tokens for both. Run the same prompt twice on each model to see variance. For long-context tests, paste a large document into the system prompt and ask a needle-in-haystack question — Claude Opus's 1M context window can hold things GPT-5 can't.</p>
+
+        <div class="cta-box">
+            <h3>Try freeprompttester.app — Free, No Sign-Up</h3>
+            <p>Bring your own API keys. Up to six models in parallel. Streams in your browser.</p>
+            <a href="/" class="cta-btn">Open AI Prompt Tester →</a>
+        </div>
+
+        <h2>Frequently Asked Questions</h2>
+        <details><summary>Why does freeprompttester.app use OpenRouter for GPT?</summary><p>OpenAI's API blocks direct browser calls. OpenRouter is a paid relay that does allow browser calls and exposes GPT-5, GPT-5 mini, GPT-4.1 and o4-mini through a single key. It keeps freeprompttester.app fully serverless.</p></details>
+        <details><summary>Is the cost shown per card accurate?</summary><p>Yes. After each call, the provider returns the exact input and output token counts (in the streaming usage metadata for OpenRouter, in the message usage object for Anthropic). freeprompttester.app multiplies those by the model's published per-million rates.</p></details>
+        <details><summary>Can I save the comparison?</summary><p>Yes. Click the copy icon on each card to copy individual outputs, or use Clear and re-run. JSON export of full runs is on the roadmap.</p></details>
+        <details><summary>How many models can I compare at once?</summary><p>Up to six per run. The grid stays readable at six on desktop; mobile stacks them into a single column.</p></details>
+        <details><summary>Are my keys safe?</summary><p>Keys live in your browser localStorage. They are sent only directly to each provider — never to a Freesuite server. Anyone with access to your browser can read them, so do not enter keys on shared computers.</p></details>
+        <details><summary>What if I only want to test Claude or only GPT?</summary><p>Pick just that one model from the picker. freeprompttester.app works as a single-model playground too.</p></details>
+
+        <h2>More Free Tools from Freesuite</h2>
+        <div class="related-tools">
+            <a href="https://freetokencounter.app" class="related-tool-card"><div class="tool-name">freetokencounter.app</div><div class="tool-desc">Live token count for 100+ AI models</div></a>
+            <a href="https://freejsonformatter.app" class="related-tool-card"><div class="tool-name">freejsonformatter.app</div><div class="tool-desc">JSON formatter & validator</div></a>
+            <a href="https://freecsv2json.app" class="related-tool-card"><div class="tool-name">freecsv2json.app</div><div class="tool-desc">Bidirectional CSV ↔ JSON</div></a>
+            <a href="https://freeregextester.app" class="related-tool-card"><div class="tool-name">freeregextester.app</div><div class="tool-desc">Live regex tester</div></a>
+            <a href="https://freediffchecker.app" class="related-tool-card"><div class="tool-name">freediffchecker.app</div><div class="tool-desc">Side-by-side diff</div></a>
+            <a href="https://freebase64.app" class="related-tool-card"><div class="tool-name">freebase64.app</div><div class="tool-desc">Base64 encode/decode</div></a>
+        </div>
+    </article>
+    <footer class="landing-footer">
+        &copy; freeprompttester.app
+    </footer>
+    <a href="https://freesuite.app" class="suite-badge" target="_blank" rel="noopener"><span class="badge-prefix">by </span>freesuite.app</a>
+    <script>
+    (()=>{const t=document.querySelector('.theme-toggle');const g=()=>localStorage.getItem('suite_theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');const a=v=>{document.documentElement.classList.toggle('dark',v==='dark');t.textContent=v==='dark'?'🌙':'☀️';localStorage.setItem('suite_theme',v)};a(g());t.addEventListener('click',()=>a(document.documentElement.classList.contains('dark')?'light':'dark'))})();
+    </script>
+</body>
+</html>

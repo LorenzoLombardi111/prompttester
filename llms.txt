@@ -1,0 +1,58 @@
+# freeprompttester.app
+
+> Free, browser-based AI prompt tester. Run the same prompt across GPT, Claude, Gemini, Grok, DeepSeek, Mistral, Cohere and Groq-hosted Llama in parallel — side by side — using your own API keys. Streams every response with live latency, token usage and per-call cost. Static page, no proxy, keys never leave the browser.
+
+## Key facts
+
+- Runs entirely client-side (static HTML/CSS/JS). No Freesuite servers in the request path.
+- Bring-your-own-key: paste a key per provider; stored in browser localStorage only.
+- 8 providers, 25+ models out of the box. Soft cap of 6 models per parallel run.
+- OpenAI is accessed via OpenRouter because OpenAI's API does not allow direct browser CORS.
+- Streams responses with TTFT (time-to-first-token), total latency, input/output token counts, and cost.
+- Cost is computed from each provider's reported token usage × published per-million rates.
+- No analytics on input. No third-party SDKs. No tracking cookies.
+- Works offline as a PWA after the first load.
+- Free, no sign-up.
+
+## Supported models (v1)
+
+Direct browser API calls:
+- Anthropic: Claude Opus 4.7, Sonnet 4.6, Haiku 4.5
+- Google: Gemini 2.5 Pro, 2.5 Flash, 2.0 Flash
+- xAI: Grok 4, Grok 4 Fast, Grok 3
+- Mistral: Large 2, Medium 3, Small 3.1
+- DeepSeek: V3.1, R1
+- Groq (Llama): Llama 4 Scout 17B, Llama 3.3 70B, Llama 3.1 8B
+- Cohere: Command A, Command R+, Command R
+
+Via OpenRouter (single key, includes OpenAI):
+- GPT-5, GPT-5 mini, GPT-4.1, o4-mini, plus 200+ other OpenRouter-listed models
+
+## Pages
+
+- [Home](https://freeprompttester.app/) — Main side-by-side prompt tester app
+- [vs OpenAI Playground](https://freeprompttester.app/vs-openai-playground) — Multi-provider comparison vs OpenAI's single-vendor playground
+- [Claude vs GPT comparison](https://freeprompttester.app/compare-claude-vs-gpt) — Side-by-side Claude / GPT testing workflow
+- [Gemini prompt tester](https://freeprompttester.app/gemini-prompt-tester) — Gemini-focused testing angle
+- [How to compare LLM outputs](https://freeprompttester.app/how-to-compare-llm-outputs) — Educational walkthrough
+- [LLM prompt playground](https://freeprompttester.app/llm-prompt-playground) — Generic playground use case
+
+## Privacy model
+
+freeprompttester.app is a static page. The page sends prompts directly from the user's browser to each AI provider the user selects. No request reaches Freesuite servers. API keys are stored in browser localStorage and used only to authenticate direct provider calls. The user can verify all of this by inspecting the Network tab in their browser's developer tools while running a prompt.
+
+## Cost model
+
+Each provider returns input and output token counts at the end of a streamed response (or in the `usage` object on a non-streaming response). freeprompttester.app multiplies those token counts by the model's published per-million rates to display per-call cost. The run bar sums costs across the run. No subscription; all spend is billed by the AI provider directly.
+
+## Related Freesuite tools
+
+- [freetokencounter.app](https://freetokencounter.app) — Count tokens for any major AI model in real time
+- [freejsonformatter.app](https://freejsonformatter.app) — JSON formatter & validator
+- [freecsv2json.app](https://freecsv2json.app) — Bidirectional CSV ↔ JSON converter
+- [freeregextester.app](https://freeregextester.app) — Regex tester with live highlighting
+- [freediffchecker.app](https://freediffchecker.app) — Side-by-side diff checker
+- [freebase64.app](https://freebase64.app) — Base64 encoder/decoder
+- [freewordcounter.app](https://freewordcounter.app) — Word & character counter
+
+For the complete text content of all pages, see [llms-full.txt](https://freeprompttester.app/llms-full.txt).

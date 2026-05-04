@@ -1,0 +1,2020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free AI Prompt Tester Online — freeprompttester.app</title>
+    <meta name="description" content="Run one prompt across GPT, Claude, Gemini, Grok, DeepSeek and more — side by side, in your browser, with your own API keys. Free.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://freeprompttester.app/">
+    <meta name="theme-color" content="#faf9f6">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="manifest" href="/manifest.json">
+
+    <meta property="og:title" content="Free AI Prompt Tester Online — freeprompttester.app">
+    <meta property="og:description" content="Run one prompt across GPT, Claude, Gemini, Grok, DeepSeek and more — side by side, in your browser, with your own API keys. Free.">
+    <meta property="og:image" content="https://freeprompttester.app/og-image.svg">
+    <meta property="og:url" content="https://freeprompttester.app/">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Free AI Prompt Tester Online — freeprompttester.app">
+    <meta name="twitter:description" content="Run one prompt across GPT, Claude, Gemini, Grok, DeepSeek and more — side by side, in your browser, with your own API keys. Free.">
+    <meta name="twitter:image" content="https://freeprompttester.app/og-image.svg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Lora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "freeprompttester.app",
+        "description": "Free AI prompt tester. Run one prompt across GPT, Claude, Gemini, Grok, DeepSeek, Mistral, Cohere and more in parallel, with streamed outputs, latency, token usage and per-call cost — entirely client-side using your own API keys.",
+        "url": "https://freeprompttester.app/",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            { "@type": "Question", "name": "What is freeprompttester.app?", "acceptedAnswer": { "@type": "Answer", "text": "freeprompttester.app is a free, browser-based playground that runs the same prompt across multiple AI models in parallel. You paste your own API keys, write a prompt, pick which models to test, and watch each provider stream its response into its own card with latency, token usage and cost shown live. Everything runs client-side — keys and prompts never leave your browser." } },
+            { "@type": "Question", "name": "Which models does freeprompttester.app support?", "acceptedAnswer": { "@type": "Answer", "text": "freeprompttester.app supports Anthropic (Claude Opus 4.7, Sonnet 4.6, Haiku 4.5), Google (Gemini 2.5 Pro, 2.5 Flash, 2.0 Flash), xAI (Grok 4, Grok 4 Fast, Grok 3), Mistral (Large 2, Medium 3, Small 3.1), DeepSeek (V3.1, R1), Groq-hosted Llama (Llama 4 Scout, 3.3 70B, 3.1 8B) and Cohere (Command A, R+, R) via direct browser calls, plus OpenAI's GPT-5, GPT-5 mini, GPT-4.1, o4-mini and any other model via OpenRouter." } },
+            { "@type": "Question", "name": "Why does freeprompttester.app use OpenRouter for OpenAI?", "acceptedAnswer": { "@type": "Answer", "text": "OpenAI's API blocks direct browser calls (no CORS headers) so a static page like freeprompttester.app cannot call it without a proxy server. OpenRouter is a paid relay that does support browser calls and gives you access to OpenAI's models with a single key. Using OpenRouter keeps freeprompttester.app fully serverless while still letting you compare GPT-5 against everything else." } },
+            { "@type": "Question", "name": "Where are my API keys stored?", "acceptedAnswer": { "@type": "Answer", "text": "API keys you paste into freeprompttester.app are saved in your browser's localStorage and used only to make requests directly from your browser to each provider. They never touch a Freesuite server. Anyone with access to your browser can read localStorage, so do not enter keys on a shared or public computer. Use the Clear all keys button to wipe them at any time." } },
+            { "@type": "Question", "name": "Is my prompt sent to Freesuite?", "acceptedAnswer": { "@type": "Answer", "text": "No. freeprompttester.app is a static page. Your prompt is sent only to the AI providers you select, directly from your browser. There is no Freesuite server in the request path, no logging, and no analytics on input. You can verify this by watching the Network tab in your browser's developer tools while running a prompt." } },
+            { "@type": "Question", "name": "How does freeprompttester.app calculate cost?", "acceptedAnswer": { "@type": "Answer", "text": "After each response finishes, freeprompttester.app reads the input and output token counts returned by the provider and multiplies them by the model's published per-million input and output rates. The cost shown per card is the cost of that single call. The run bar adds them up across all selected models so you can see total spend per run." } },
+            { "@type": "Question", "name": "Can I compare more than two models at once?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. freeprompttester.app lets you select up to six models per run. They stream in parallel into a responsive grid (two columns on desktop, one on mobile). Six is the soft cap to keep the UI scannable; for larger sweeps, run two batches and compare the saved JSON exports." } },
+            { "@type": "Question", "name": "Does freeprompttester.app support streaming?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every supported provider streams responses as they generate, and freeprompttester.app renders tokens as they arrive. Time-to-first-token is shown next to each card so you can see how fast each model starts producing output, not just total latency. Streaming can be disabled in settings if you prefer one-shot responses." } }
+        ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://freeprompttester.app/" }
+        ]
+    }
+    </script>
+
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #faf9f6;
+            --surface: #f4f2ee;
+            --border: #e8e4dd;
+            --text-primary: #1a1917;
+            --text-secondary: #6b6760;
+            --text-muted: #9e9b96;
+            --accent: #C49A2A;
+            --accent-hover: #A8831F;
+            --accent-text: #ffffff;
+            --destructive: #c0392b;
+            --success: #27ae60;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.04);
+            --font-body: 'Lora', serif;
+            --font-ui: 'DM Sans', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        html.dark {
+            --bg: #141412;
+            --surface: #1e1c1a;
+            --border: #2e2b27;
+            --text-primary: #f0ede8;
+            --text-secondary: #9e9b96;
+            --text-muted: #6b6760;
+            --accent: #D4A835;
+            --accent-hover: #C49A2A;
+            --accent-text: #ffffff;
+            --success: #2ecc71;
+            --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        html { font-size: 15px; line-height: 1.6; }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .header-brand {
+            font-family: var(--font-ui);
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--accent);
+            text-decoration: none;
+        }
+        .header-actions { display: flex; align-items: center; gap: 8px; }
+
+        /* Theme toggle */
+        .theme-toggle, .icon-btn {
+            font-family: var(--font-ui);
+            font-size: 13px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 12px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .theme-toggle:hover, .icon-btn:hover { background: var(--border); }
+        .icon-btn .badge {
+            background: var(--accent);
+            color: var(--accent-text);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        /* Buttons */
+        .btn {
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-primary { background: var(--accent); color: var(--accent-text); }
+        .btn-primary:hover:not(:disabled) { background: var(--accent-hover); }
+        .btn-lg { padding: 12px 24px; font-size: 15px; font-weight: 600; }
+        .btn-secondary { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
+        .btn-secondary:hover:not(:disabled) { background: var(--surface); }
+        .btn-destructive { background: transparent; border: 1px solid var(--destructive); color: var(--destructive); }
+        .btn-destructive:hover:not(:disabled) { background: var(--surface); }
+
+        /* Inputs */
+        .input, .textarea {
+            font-family: var(--font-ui);
+            font-size: 13px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 12px;
+            color: var(--text-primary);
+            transition: all 0.15s ease;
+            width: 100%;
+        }
+        .input:focus, .textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(196,154,42,0.12);
+        }
+        .textarea { font-family: var(--font-mono); font-size: 14px; resize: vertical; line-height: 1.5; }
+        .input-mono { font-family: var(--font-mono); font-size: 13px; }
+
+        /* Layout */
+        .main {
+            flex: 1;
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+        }
+        .panel-title {
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .panel-title .panel-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: none;
+            letter-spacing: 0;
+            font-weight: 400;
+        }
+
+        /* Prompt section */
+        .prompt-section { display: flex; flex-direction: column; gap: 12px; }
+        .system-prompt-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .system-prompt-toggle .chevron { transition: transform 0.15s ease; }
+        .system-prompt-toggle.open .chevron { transform: rotate(90deg); }
+        .system-prompt-wrap { display: none; }
+        .system-prompt-wrap.open { display: block; }
+        .prompt-textarea {
+            min-height: 140px;
+            max-height: 50vh;
+        }
+        .system-textarea { min-height: 70px; }
+        .prompt-meta {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-ui);
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Model picker */
+        .model-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .model-chip {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            user-select: none;
+        }
+        .model-chip:hover { background: var(--surface); border-color: var(--text-muted); }
+        .model-chip.selected {
+            background: var(--accent);
+            color: var(--accent-text);
+            border-color: var(--accent);
+        }
+        .model-chip.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .model-chip .provider-pill {
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            opacity: 0.7;
+        }
+        .model-chip .key-warn {
+            color: var(--destructive);
+            font-size: 11px;
+        }
+        .model-chip.selected .key-warn { color: #ffe7e0; }
+
+        .model-section-tab {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .tab-btn {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 500;
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.15s ease;
+        }
+        .tab-btn:hover { color: var(--text-primary); }
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Params */
+        .params-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+        .param-group { display: flex; flex-direction: column; gap: 4px; min-width: 120px; }
+        .param-group label {
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .param-group .input { padding: 6px 10px; font-size: 12px; }
+
+        /* Run bar */
+        .run-bar {
+            position: sticky;
+            top: 52px;
+            z-index: 40;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: var(--shadow);
+        }
+        .run-bar .run-meta {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .run-meta strong { color: var(--text-primary); font-weight: 600; }
+
+        /* Result cards */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 16px;
+        }
+        .result-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            min-height: 200px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .result-card.pinned { border-color: var(--accent); }
+        .result-header {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: var(--bg);
+        }
+        .result-title {
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .result-provider {
+            font-family: var(--font-ui);
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-left: 6px;
+        }
+        .result-actions { display: flex; gap: 4px; }
+        .icon-action {
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 6px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-family: var(--font-ui);
+            font-size: 11px;
+            color: var(--text-muted);
+            transition: all 0.15s ease;
+        }
+        .icon-action:hover { background: var(--border); color: var(--text-primary); }
+        .icon-action.active { color: var(--accent); }
+        .result-body {
+            padding: 16px;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            flex: 1;
+            overflow-y: auto;
+            max-height: 540px;
+        }
+        .result-body.empty {
+            color: var(--text-muted);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-style: italic;
+        }
+        .result-error {
+            color: var(--destructive);
+            font-family: var(--font-ui);
+            font-size: 12px;
+            background: rgba(192,57,43,0.05);
+            border: 1px solid rgba(192,57,43,0.2);
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px;
+            white-space: normal;
+        }
+        .result-footer {
+            padding: 8px 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-ui);
+            font-size: 11px;
+            color: var(--text-muted);
+            background: var(--bg);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .result-footer strong { color: var(--text-secondary); font-weight: 500; }
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-family: var(--font-ui);
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+        .status-pill.streaming { color: var(--accent); border-color: var(--accent); }
+        .status-pill.done { color: var(--success); border-color: var(--success); }
+        .status-pill.error { color: var(--destructive); border-color: var(--destructive); }
+        .status-pill .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+        .status-pill.streaming .dot { animation: pulse 0.8s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .empty-state {
+            text-align: center;
+            padding: 64px 24px;
+            color: var(--text-muted);
+            font-family: var(--font-ui);
+            font-size: 14px;
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+        }
+        .empty-state strong { color: var(--text-secondary); display: block; margin-bottom: 8px; font-size: 16px; }
+
+        /* Modal */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .modal-backdrop.open { display: flex; }
+        .modal {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+        }
+        .modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .modal-title {
+            font-family: var(--font-ui);
+            font-size: 15px;
+            font-weight: 600;
+        }
+        .modal-close {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--text-muted);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .modal-close:hover { background: var(--surface); color: var(--text-primary); }
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex: 1;
+        }
+        .modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .key-row {
+            margin-bottom: 16px;
+        }
+        .key-row label {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .key-row label a {
+            font-size: 11px;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 400;
+        }
+        .key-row label a:hover { text-decoration: underline; }
+        .key-input-wrap { display: flex; gap: 6px; }
+        .key-input-wrap .input { flex: 1; }
+        .key-status {
+            font-family: var(--font-ui);
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            min-height: 14px;
+        }
+        .key-status.ok { color: var(--success); }
+        .key-status.bad { color: var(--destructive); }
+        .key-warning {
+            background: rgba(192,57,43,0.05);
+            border: 1px solid rgba(192,57,43,0.2);
+            border-radius: 8px;
+            padding: 12px;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--destructive);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        /* Status bar */
+        .status-bar {
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            flex-shrink: 0;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* Suite badge */
+        .suite-badge {
+            position: fixed;
+            bottom: 40px;
+            right: 16px;
+            font-family: var(--font-ui);
+            font-size: 11px;
+            color: var(--text-muted);
+            text-decoration: none;
+            z-index: 30;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--text-primary);
+            color: var(--bg);
+            font-family: var(--font-ui);
+            font-size: 13px;
+            padding: 10px 20px;
+            border-radius: 8px;
+            opacity: 0;
+            transition: all 0.15s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* Upgrade prompt */
+        .upgrade-prompt {
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+            margin-top: 8px;
+        }
+        .upgrade-prompt .upgrade-title {
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        .upgrade-prompt .upgrade-desc {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        .upgrade-prompt .upgrade-link {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--accent);
+            text-decoration: none;
+            margin-top: 4px;
+            display: inline-block;
+        }
+        .upgrade-prompt .upgrade-link:hover { text-decoration: underline; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+        /* SEO content */
+        .seo-content {
+            max-width: 760px;
+            margin: 48px auto 0;
+            padding: 64px 24px;
+            font-family: var(--font-body);
+            color: var(--text-primary);
+            border-top: 1px solid var(--border);
+        }
+        .seo-content h1 {
+            font-family: var(--font-body);
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.3;
+        }
+        .seo-content h2 {
+            font-family: var(--font-body);
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 32px;
+            margin-bottom: 12px;
+        }
+        .seo-content p { color: var(--text-secondary); margin-bottom: 16px; line-height: 1.7; }
+        .seo-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-family: var(--font-ui);
+            font-size: 13px;
+        }
+        .seo-content th, .seo-content td {
+            text-align: left;
+            padding: 8px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        .seo-content th { font-weight: 600; color: var(--text-primary); }
+        .seo-content td { color: var(--text-secondary); }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+        }
+        .feature-card h3 {
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .feature-card p { font-family: var(--font-ui); font-size: 12px; color: var(--text-secondary); margin: 0; }
+        .seo-content details {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 8px;
+        }
+        .seo-content summary {
+            font-family: var(--font-ui);
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-primary);
+        }
+        .seo-content details p { margin-top: 12px; margin-bottom: 0; font-family: var(--font-ui); font-size: 13px; }
+        .seo-footer {
+            text-align: center;
+            padding: 32px 24px;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .more-tools { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; }
+        .more-tools-label {
+            font-family: var(--font-ui);
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+        .more-tools-links { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .more-tools-links a {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--accent);
+            text-decoration: none;
+            padding: 4px 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+        .more-tools-links a:hover { background: var(--surface); }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .main { padding: 16px; gap: 16px; }
+            .results-grid { grid-template-columns: 1fr; }
+            .run-bar { flex-direction: column; align-items: stretch; }
+            .run-bar .run-meta { font-size: 11px; gap: 12px; }
+            .suite-badge { display: none; }
+            .params-row { gap: 8px; }
+            .param-group { min-width: 90px; flex: 1; }
+            .modal-backdrop { padding: 0; }
+            .modal { border-radius: 0; max-height: 100vh; height: 100vh; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="header">
+    <a href="/" class="header-brand">freeprompttester.app</a>
+    <div class="header-actions">
+        <button class="icon-btn" id="keysBtn" aria-label="API keys">
+            <span>API keys</span>
+            <span class="badge" id="keyCount">0</span>
+        </button>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <span class="toggle-icon">☀️</span>
+        </button>
+    </div>
+</header>
+
+<main class="main" id="app">
+
+    <section class="panel prompt-section">
+        <div class="panel-title">
+            <span>Prompt</span>
+            <span class="panel-meta" id="promptMeta">0 chars · 0 words</span>
+        </div>
+        <div class="system-prompt-toggle" id="systemToggle">
+            <span class="chevron">▸</span>
+            <span>System prompt (optional)</span>
+        </div>
+        <div class="system-prompt-wrap" id="systemWrap">
+            <textarea class="textarea system-textarea" id="systemPrompt" placeholder="You are a helpful assistant..."></textarea>
+        </div>
+        <textarea class="textarea prompt-textarea" id="userPrompt" placeholder="Write your prompt here. Try asking the same question to different models and compare how they answer."></textarea>
+    </section>
+
+    <section class="panel">
+        <div class="panel-title">
+            <span>Models <span class="panel-meta" id="modelCount">0 selected · max 6</span></span>
+            <span class="panel-meta">Direct browser calls + OpenRouter for OpenAI</span>
+        </div>
+        <div class="model-section-tab" id="modelTabs"></div>
+        <div class="model-grid" id="modelGrid"></div>
+    </section>
+
+    <section class="panel">
+        <div class="panel-title"><span>Parameters</span></div>
+        <div class="params-row">
+            <div class="param-group">
+                <label for="paramTemp">Temperature</label>
+                <input class="input" id="paramTemp" type="number" min="0" max="2" step="0.1" value="0.7">
+            </div>
+            <div class="param-group">
+                <label for="paramMaxTokens">Max output tokens</label>
+                <input class="input" id="paramMaxTokens" type="number" min="1" max="32000" step="1" value="1024">
+            </div>
+            <div class="param-group">
+                <label for="paramTopP">Top P</label>
+                <input class="input" id="paramTopP" type="number" min="0" max="1" step="0.05" value="1">
+            </div>
+            <div class="param-group">
+                <label for="paramStream">Streaming</label>
+                <select class="input" id="paramStream">
+                    <option value="1" selected>On</option>
+                    <option value="0">Off</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <div class="run-bar">
+        <div class="run-meta">
+            <span><strong id="selectedCount">0</strong> models selected</span>
+            <span><strong id="costMeter">$0.0000</strong> last run</span>
+            <span id="runStatus"></span>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn btn-secondary" id="exampleBtn">Example</button>
+            <button class="btn btn-secondary" id="clearBtn">Clear</button>
+            <button class="btn btn-secondary" id="stopBtn" disabled>Stop all</button>
+            <button class="btn btn-primary btn-lg" id="runBtn">Run</button>
+        </div>
+    </div>
+
+    <section id="resultsSection">
+        <div class="empty-state" id="emptyState">
+            <strong>Pick at least one model and hit Run.</strong>
+            Each selected model will stream its response into its own card with latency, token usage and cost.
+        </div>
+        <div class="results-grid" id="resultsGrid"></div>
+    </section>
+
+    <div class="upgrade-prompt">
+        <div class="upgrade-title">🔒 Saved evaluations + scoring</div>
+        <div class="upgrade-desc">Save prompt+model combinations as named evals, re-run with one click, score outputs and chart history. For prompt-engineering teams comparing changes over time.</div>
+        <a href="https://freesuite.app" class="upgrade-link" target="_blank" rel="noopener">Unlock with freesuite.app · $2.88/mo</a>
+    </div>
+</main>
+
+<footer class="status-bar">
+    <span id="statusLeft">Ready</span>
+    <span>Your prompts and keys never leave this browser</span>
+</footer>
+
+<a href="https://freesuite.app" class="suite-badge" target="_blank" rel="noopener">by freesuite.app</a>
+
+<div class="toast" id="toast"></div>
+
+<!-- API Keys Modal -->
+<div class="modal-backdrop" id="keysModal">
+    <div class="modal" role="dialog" aria-labelledby="keysTitle">
+        <div class="modal-header">
+            <div class="modal-title" id="keysTitle">API keys</div>
+            <button class="modal-close" id="keysClose" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="key-warning">
+                <strong>Heads up:</strong> Keys are saved in this browser's localStorage as plaintext, used only for direct browser-to-provider calls. Do not enter keys on a shared or public computer. Click "Clear all" below to wipe at any time.
+            </div>
+            <div id="keysList"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-destructive" id="clearKeysBtn">Clear all keys</button>
+            <button class="btn btn-primary" id="saveKeysBtn">Save & close</button>
+        </div>
+    </div>
+</div>
+
+<!-- SEO Content -->
+<div class="seo-content">
+    <h1>AI Prompt Tester — Compare GPT, Claude, Gemini and More Side by Side</h1>
+
+    <p>freeprompttester.app is a free, browser-based playground for running the same prompt across multiple AI models in parallel. You paste your own API keys for the providers you want to test, write a system and user prompt, pick up to six models from any combination of OpenAI (via OpenRouter), Anthropic, Google, xAI, Mistral, DeepSeek, Cohere and Groq, and watch each provider stream its response into its own card with time-to-first-token, total latency, token usage and per-call cost shown live.</p>
+
+    <p>Everything runs client-side. Your prompts and API keys are sent directly from your browser to each provider. No proxy server, no Freesuite middleman, no logging — you can verify it in the Network tab in your browser's developer tools.</p>
+
+    <h2>How does freeprompttester.app compare AI models?</h2>
+    <p>freeprompttester.app fans out parallel <code>fetch()</code> calls to each selected provider's chat completion endpoint when you click Run. Each response streams into its own card so you can read them as they arrive, side by side. After every call finishes, freeprompttester.app reads the input and output token counts returned by the provider and multiplies them by published per-million rates to show the exact cost of each call.</p>
+
+    <h2>Why count tokens before sending a prompt?</h2>
+    <p>Different models price input and output tokens differently, and the same English text can become 1.0× tokens on GPT-5, 0.95× on Claude Opus 4.7, and 1.6× on a Llama-based model. Without comparing them side by side, it is hard to know which model gives the best output-per-dollar for your specific workload. freeprompttester.app shows you the answer in one run.</p>
+
+    <h2>Is freeprompttester.app free and private?</h2>
+    <p>Yes. freeprompttester.app is free to use, has no sign-up, no ads and no tracking. Provider API costs are billed by each provider directly — Freesuite never sees the prompt, the response or the key. The page is a static HTML/CSS/JS bundle that runs in your browser; the only network traffic is the streamed response from each AI provider you select.</p>
+
+    <h2>How accurate are the cost numbers?</h2>
+    <p>Cost is computed from the token counts each provider returns at the end of the call (or in the streaming usage metadata) multiplied by the model's published per-million input and output rates. For models that don't return usage data in the stream, freeprompttester.app falls back to a calibrated character-based estimate — clearly labeled. Always check live pricing for production budgeting.</p>
+
+    <h2>AI Model Comparison Matrix</h2>
+    <table>
+        <thead><tr><th>Model</th><th>Provider</th><th>Context</th><th>Input $/M</th><th>Output $/M</th><th>Access</th></tr></thead>
+        <tbody>
+            <tr><td>Claude Opus 4.7</td><td>Anthropic</td><td>1M</td><td>$15</td><td>$75</td><td>Direct</td></tr>
+            <tr><td>Claude Sonnet 4.6</td><td>Anthropic</td><td>1M</td><td>$3</td><td>$15</td><td>Direct</td></tr>
+            <tr><td>Claude Haiku 4.5</td><td>Anthropic</td><td>200K</td><td>$1</td><td>$5</td><td>Direct</td></tr>
+            <tr><td>Gemini 2.5 Pro</td><td>Google</td><td>1M</td><td>$1.25</td><td>$10</td><td>Direct</td></tr>
+            <tr><td>Gemini 2.5 Flash</td><td>Google</td><td>1M</td><td>$0.30</td><td>$2.50</td><td>Direct</td></tr>
+            <tr><td>Grok 4</td><td>xAI</td><td>256K</td><td>$5</td><td>$15</td><td>Direct</td></tr>
+            <tr><td>Grok 4 Fast</td><td>xAI</td><td>2M</td><td>$0.20</td><td>$0.50</td><td>Direct</td></tr>
+            <tr><td>GPT-5</td><td>OpenAI</td><td>400K</td><td>$1.25</td><td>$10</td><td>OpenRouter</td></tr>
+            <tr><td>GPT-5 mini</td><td>OpenAI</td><td>400K</td><td>$0.25</td><td>$2</td><td>OpenRouter</td></tr>
+            <tr><td>GPT-4.1</td><td>OpenAI</td><td>1M</td><td>$3</td><td>$12</td><td>OpenRouter</td></tr>
+            <tr><td>DeepSeek V3.1</td><td>DeepSeek</td><td>128K</td><td>$0.27</td><td>$1.10</td><td>Direct</td></tr>
+            <tr><td>DeepSeek R1</td><td>DeepSeek</td><td>128K</td><td>$0.55</td><td>$2.19</td><td>Direct</td></tr>
+            <tr><td>Mistral Large 2</td><td>Mistral</td><td>128K</td><td>$2</td><td>$6</td><td>Direct</td></tr>
+            <tr><td>Llama 4 Scout 17B</td><td>Groq</td><td>128K</td><td>$0.11</td><td>$0.34</td><td>Direct</td></tr>
+            <tr><td>Llama 3.3 70B</td><td>Groq</td><td>128K</td><td>$0.59</td><td>$0.79</td><td>Direct</td></tr>
+            <tr><td>Command A</td><td>Cohere</td><td>256K</td><td>$2.50</td><td>$10</td><td>Direct</td></tr>
+        </tbody>
+    </table>
+    <p style="font-size:12px; color:var(--text-muted);">Prices last updated 2026-05-04. Always verify with each provider's pricing page.</p>
+
+    <h2>Why use freeprompttester.app?</h2>
+    <div class="feature-grid">
+        <div class="feature-card"><h3>Bring your own keys</h3><p>One key per provider. They live in localStorage, never on a server.</p></div>
+        <div class="feature-card"><h3>True parallel runs</h3><p>Up to six models stream side by side. See TTFT, latency, tokens and cost.</p></div>
+        <div class="feature-card"><h3>No proxy, no logging</h3><p>Static HTML page. Calls go browser → provider directly.</p></div>
+        <div class="feature-card"><h3>Honest about OpenAI</h3><p>OpenAI blocks browser calls. We say so and route GPT through OpenRouter.</p></div>
+    </div>
+
+    <h2>How it works</h2>
+    <p><strong>1. Add your API keys.</strong> Click "API keys" in the header. Paste a key for each provider you want to use. Keys are stored in your browser's localStorage and used only for direct provider calls.</p>
+    <p><strong>2. Write your prompt.</strong> Enter a system prompt (optional) and a user prompt. Adjust temperature, max tokens and top-p if needed.</p>
+    <p><strong>3. Pick up to six models.</strong> Click chips to select. Models from providers without keys are visually marked.</p>
+    <p><strong>4. Run.</strong> Each model streams its answer into its own card with live token count, time-to-first-token, total latency and per-call cost.</p>
+
+    <h2>Frequently Asked Questions</h2>
+
+    <details>
+        <summary>What is freeprompttester.app?</summary>
+        <p>freeprompttester.app is a free, browser-based playground that runs the same prompt across multiple AI models in parallel. You paste your own API keys, write a prompt, pick which models to test, and watch each provider stream its response into its own card with latency, token usage and cost shown live. Everything runs client-side — keys and prompts never leave your browser.</p>
+    </details>
+
+    <details>
+        <summary>Which models does freeprompttester.app support?</summary>
+        <p>freeprompttester.app supports Anthropic (Claude Opus 4.7, Sonnet 4.6, Haiku 4.5), Google (Gemini 2.5 Pro, 2.5 Flash, 2.0 Flash), xAI (Grok 4, Grok 4 Fast, Grok 3), Mistral (Large 2, Medium 3, Small 3.1), DeepSeek (V3.1, R1), Groq-hosted Llama (Llama 4 Scout, 3.3 70B, 3.1 8B) and Cohere (Command A, R+, R) via direct browser calls, plus OpenAI's GPT-5, GPT-5 mini, GPT-4.1, o4-mini and any other model via OpenRouter.</p>
+    </details>
+
+    <details>
+        <summary>Why does freeprompttester.app use OpenRouter for OpenAI?</summary>
+        <p>OpenAI's API blocks direct browser calls (no CORS headers) so a static page like freeprompttester.app cannot call it without a proxy server. OpenRouter is a paid relay that does support browser calls and gives you access to OpenAI's models with a single key. Using OpenRouter keeps freeprompttester.app fully serverless while still letting you compare GPT-5 against everything else.</p>
+    </details>
+
+    <details>
+        <summary>Where are my API keys stored?</summary>
+        <p>API keys you paste into freeprompttester.app are saved in your browser's localStorage and used only to make requests directly from your browser to each provider. They never touch a Freesuite server. Anyone with access to your browser can read localStorage, so do not enter keys on a shared or public computer. Use the Clear all keys button to wipe them at any time.</p>
+    </details>
+
+    <details>
+        <summary>Is my prompt sent to Freesuite?</summary>
+        <p>No. freeprompttester.app is a static page. Your prompt is sent only to the AI providers you select, directly from your browser. There is no Freesuite server in the request path, no logging, and no analytics on input. You can verify this by watching the Network tab in your browser's developer tools while running a prompt.</p>
+    </details>
+
+    <details>
+        <summary>How does freeprompttester.app calculate cost?</summary>
+        <p>After each response finishes, freeprompttester.app reads the input and output token counts returned by the provider and multiplies them by the model's published per-million input and output rates. The cost shown per card is the cost of that single call. The run bar adds them up across all selected models so you can see total spend per run.</p>
+    </details>
+
+    <details>
+        <summary>Can I compare more than two models at once?</summary>
+        <p>Yes. freeprompttester.app lets you select up to six models per run. They stream in parallel into a responsive grid (two columns on desktop, one on mobile). Six is the soft cap to keep the UI scannable; for larger sweeps, run two batches and compare the saved JSON exports.</p>
+    </details>
+
+    <details>
+        <summary>Does freeprompttester.app support streaming?</summary>
+        <p>Yes. Every supported provider streams responses as they generate, and freeprompttester.app renders tokens as they arrive. Time-to-first-token is shown next to each card so you can see how fast each model starts producing output, not just total latency. Streaming can be disabled in settings if you prefer one-shot responses.</p>
+    </details>
+</div>
+
+<footer class="seo-footer">
+    &copy; freeprompttester.app
+    <div class="more-tools">
+        <div class="more-tools-label">More free tools from Freesuite</div>
+        <div class="more-tools-links">
+            <a href="https://freetokencounter.app">AI Token Counter</a>
+            <a href="https://freejsonformatter.app">JSON Formatter</a>
+            <a href="https://freecsv2json.app">CSV to JSON</a>
+            <a href="https://freeregextester.app">Regex Tester</a>
+            <a href="https://freediffchecker.app">Diff Checker</a>
+            <a href="https://freebase64.app">Base64</a>
+            <a href="https://freewordcounter.app">Word Counter</a>
+            <a href="https://freesuite.app">All tools</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+/* ===== Theme ===== */
+(() => {
+    const toggle = document.getElementById('themeToggle');
+    const icon = toggle.querySelector('.toggle-icon');
+    const getTheme = () => {
+        const stored = localStorage.getItem('suite_theme');
+        if (stored) return stored;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    const applyTheme = (theme) => {
+        document.documentElement.classList.toggle('dark', theme === 'dark');
+        icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+        localStorage.setItem('suite_theme', theme);
+    };
+    applyTheme(getTheme());
+    toggle.addEventListener('click', () => {
+        const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+    });
+})();
+
+/* ===== Toast ===== */
+const showToast = (message) => {
+    const toast = document.getElementById('toast');
+    toast.textContent = message;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+};
+
+/* ===== Service Worker ===== */
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+        reg.addEventListener('updatefound', () => {
+            const newSW = reg.installing;
+            newSW.addEventListener('statechange', () => {
+                if (newSW.state === 'installed' && navigator.serviceWorker.controller) {
+                    showToast('Update available — refreshing...');
+                    newSW.postMessage('skipWaiting');
+                }
+            });
+        });
+    }).catch(() => {});
+    navigator.serviceWorker.addEventListener('controllerchange', () => window.location.reload());
+}
+
+/* ============================================================
+   MODEL CATALOG
+   priceIn / priceOut: USD per 1M tokens
+   ============================================================ */
+const MODELS = [
+    // Anthropic
+    { id: 'anthropic:claude-opus-4-5', label: 'Claude Opus 4.7', provider: 'anthropic', apiId: 'claude-opus-4-5', ctx: 1000000, priceIn: 15, priceOut: 75, popular: true },
+    { id: 'anthropic:claude-sonnet-4-5', label: 'Claude Sonnet 4.6', provider: 'anthropic', apiId: 'claude-sonnet-4-5', ctx: 1000000, priceIn: 3, priceOut: 15, popular: true },
+    { id: 'anthropic:claude-haiku-4-5', label: 'Claude Haiku 4.5', provider: 'anthropic', apiId: 'claude-haiku-4-5', ctx: 200000, priceIn: 1, priceOut: 5 },
+
+    // Google
+    { id: 'google:gemini-2.5-pro', label: 'Gemini 2.5 Pro', provider: 'google', apiId: 'gemini-2.5-pro', ctx: 1000000, priceIn: 1.25, priceOut: 10, popular: true },
+    { id: 'google:gemini-2.5-flash', label: 'Gemini 2.5 Flash', provider: 'google', apiId: 'gemini-2.5-flash', ctx: 1000000, priceIn: 0.30, priceOut: 2.50 },
+    { id: 'google:gemini-2.0-flash', label: 'Gemini 2.0 Flash', provider: 'google', apiId: 'gemini-2.0-flash', ctx: 1000000, priceIn: 0.10, priceOut: 0.40 },
+
+    // xAI
+    { id: 'xai:grok-4', label: 'Grok 4', provider: 'xai', apiId: 'grok-4', ctx: 256000, priceIn: 5, priceOut: 15, popular: true },
+    { id: 'xai:grok-4-fast', label: 'Grok 4 Fast', provider: 'xai', apiId: 'grok-4-fast', ctx: 2000000, priceIn: 0.20, priceOut: 0.50 },
+    { id: 'xai:grok-3', label: 'Grok 3', provider: 'xai', apiId: 'grok-3', ctx: 131072, priceIn: 3, priceOut: 15 },
+
+    // Mistral
+    { id: 'mistral:mistral-large-latest', label: 'Mistral Large 2', provider: 'mistral', apiId: 'mistral-large-latest', ctx: 128000, priceIn: 2, priceOut: 6 },
+    { id: 'mistral:mistral-medium-latest', label: 'Mistral Medium 3', provider: 'mistral', apiId: 'mistral-medium-latest', ctx: 128000, priceIn: 0.40, priceOut: 2 },
+    { id: 'mistral:mistral-small-latest', label: 'Mistral Small 3.1', provider: 'mistral', apiId: 'mistral-small-latest', ctx: 128000, priceIn: 0.10, priceOut: 0.30 },
+
+    // DeepSeek
+    { id: 'deepseek:deepseek-chat', label: 'DeepSeek V3.1', provider: 'deepseek', apiId: 'deepseek-chat', ctx: 128000, priceIn: 0.27, priceOut: 1.10 },
+    { id: 'deepseek:deepseek-reasoner', label: 'DeepSeek R1', provider: 'deepseek', apiId: 'deepseek-reasoner', ctx: 128000, priceIn: 0.55, priceOut: 2.19 },
+
+    // Groq
+    { id: 'groq:llama-4-scout-17b', label: 'Llama 4 Scout 17B', provider: 'groq', apiId: 'meta-llama/llama-4-scout-17b-16e-instruct', ctx: 128000, priceIn: 0.11, priceOut: 0.34 },
+    { id: 'groq:llama-3.3-70b', label: 'Llama 3.3 70B', provider: 'groq', apiId: 'llama-3.3-70b-versatile', ctx: 128000, priceIn: 0.59, priceOut: 0.79 },
+    { id: 'groq:llama-3.1-8b', label: 'Llama 3.1 8B', provider: 'groq', apiId: 'llama-3.1-8b-instant', ctx: 128000, priceIn: 0.05, priceOut: 0.08 },
+
+    // Cohere
+    { id: 'cohere:command-a-03-2025', label: 'Command A', provider: 'cohere', apiId: 'command-a-03-2025', ctx: 256000, priceIn: 2.50, priceOut: 10 },
+    { id: 'cohere:command-r-plus', label: 'Command R+', provider: 'cohere', apiId: 'command-r-plus', ctx: 128000, priceIn: 2.50, priceOut: 10 },
+    { id: 'cohere:command-r', label: 'Command R', provider: 'cohere', apiId: 'command-r', ctx: 128000, priceIn: 0.15, priceOut: 0.60 },
+
+    // OpenRouter (OpenAI + others)
+    { id: 'openrouter:openai/gpt-5', label: 'GPT-5 (OpenRouter)', provider: 'openrouter', apiId: 'openai/gpt-5', ctx: 400000, priceIn: 1.25, priceOut: 10, popular: true },
+    { id: 'openrouter:openai/gpt-5-mini', label: 'GPT-5 mini (OpenRouter)', provider: 'openrouter', apiId: 'openai/gpt-5-mini', ctx: 400000, priceIn: 0.25, priceOut: 2 },
+    { id: 'openrouter:openai/gpt-4.1', label: 'GPT-4.1 (OpenRouter)', provider: 'openrouter', apiId: 'openai/gpt-4.1', ctx: 1000000, priceIn: 3, priceOut: 12 },
+    { id: 'openrouter:openai/o4-mini', label: 'o4-mini (OpenRouter)', provider: 'openrouter', apiId: 'openai/o4-mini', ctx: 200000, priceIn: 1.10, priceOut: 4.40 },
+];
+
+const PROVIDER_INFO = {
+    anthropic: { name: 'Anthropic', keyUrl: 'https://console.anthropic.com/settings/keys' },
+    google: { name: 'Google AI', keyUrl: 'https://aistudio.google.com/app/apikey' },
+    xai: { name: 'xAI', keyUrl: 'https://console.x.ai/' },
+    mistral: { name: 'Mistral', keyUrl: 'https://console.mistral.ai/api-keys' },
+    deepseek: { name: 'DeepSeek', keyUrl: 'https://platform.deepseek.com/api_keys' },
+    groq: { name: 'Groq', keyUrl: 'https://console.groq.com/keys' },
+    cohere: { name: 'Cohere', keyUrl: 'https://dashboard.cohere.com/api-keys' },
+    openrouter: { name: 'OpenRouter (for OpenAI)', keyUrl: 'https://openrouter.ai/keys' },
+};
+
+const PROVIDER_ORDER = ['anthropic', 'google', 'xai', 'mistral', 'deepseek', 'groq', 'cohere', 'openrouter'];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const State = {
+    keys: JSON.parse(localStorage.getItem('prompttester_keys') || '{}'),
+    selected: JSON.parse(localStorage.getItem('prompttester_models') || 'null') || ['anthropic:claude-opus-4-5', 'openrouter:openai/gpt-5', 'google:gemini-2.5-pro', 'xai:grok-4'],
+    runs: new Map(), // model -> {controller, startTime, cardEl, output, ttft}
+    activeTab: 'popular',
+};
+
+const saveKeys = () => localStorage.setItem('prompttester_keys', JSON.stringify(State.keys));
+const saveSelected = () => localStorage.setItem('prompttester_models', JSON.stringify(State.selected));
+const saveLastPrompt = () => {
+    const data = JSON.stringify({
+        sys: document.getElementById('systemPrompt').value,
+        usr: document.getElementById('userPrompt').value,
+    });
+    if (data.length < 200000) localStorage.setItem('prompttester_last_prompt', data);
+};
+const restoreLastPrompt = () => {
+    try {
+        const raw = localStorage.getItem('prompttester_last_prompt');
+        if (!raw) return;
+        const { sys, usr } = JSON.parse(raw);
+        if (sys) document.getElementById('systemPrompt').value = sys;
+        if (usr) document.getElementById('userPrompt').value = usr;
+    } catch {}
+};
+
+/* ============================================================
+   SSE PARSING — generic line iterator
+   ============================================================ */
+async function* sseLines(response, signal) {
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buffer = '';
+    try {
+        while (true) {
+            if (signal && signal.aborted) break;
+            const { value, done } = await reader.read();
+            if (done) break;
+            buffer += decoder.decode(value, { stream: true });
+            let idx;
+            while ((idx = buffer.indexOf('\n')) !== -1) {
+                const line = buffer.slice(0, idx).replace(/\r$/, '');
+                buffer = buffer.slice(idx + 1);
+                if (line.length > 0) yield line;
+            }
+        }
+        if (buffer.trim()) yield buffer.trim();
+    } finally {
+        try { reader.releaseLock(); } catch {}
+    }
+}
+
+const formatCost = (cost) => {
+    if (!cost) return '$0.0000';
+    if (cost < 0.01) return '$' + cost.toFixed(4);
+    if (cost < 1) return '$' + cost.toFixed(3);
+    return '$' + cost.toFixed(2);
+};
+
+/* ============================================================
+   PROVIDERS — each returns { runStream, parseStream }
+   Common signature: async runStream({ model, system, user, params, signal, onToken, onUsage })
+   ============================================================ */
+
+// OpenAI-compatible streaming SSE: lines like "data: {...}" and "data: [DONE]"
+async function streamOpenAICompatible({ url, headers, body, signal, onToken, onUsage }) {
+    const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body), signal });
+    if (!res.ok) {
+        const txt = await res.text().catch(() => '');
+        throw new Error(`HTTP ${res.status}: ${txt.slice(0, 400) || res.statusText}`);
+    }
+    let usage = null;
+    for await (const line of sseLines(res, signal)) {
+        if (!line.startsWith('data:')) continue;
+        const data = line.slice(5).trim();
+        if (data === '[DONE]') break;
+        try {
+            const obj = JSON.parse(data);
+            const delta = obj.choices?.[0]?.delta?.content;
+            if (delta) onToken(delta);
+            if (obj.usage) usage = obj.usage;
+        } catch {}
+    }
+    if (usage) onUsage({
+        in: usage.prompt_tokens || usage.input_tokens || 0,
+        out: usage.completion_tokens || usage.output_tokens || 0,
+    });
+}
+
+const PROVIDERS = {
+    anthropic: {
+        async run({ model, system, user, params, signal, onToken, onUsage }) {
+            const key = State.keys.anthropic;
+            if (!key) throw new Error('Missing Anthropic API key. Add it in the API keys panel.');
+            const body = {
+                model: model.apiId,
+                max_tokens: Math.min(params.maxTokens, 16000),
+                messages: [{ role: 'user', content: user }],
+                temperature: params.temp,
+                top_p: params.topP,
+                stream: params.stream,
+            };
+            if (system) body.system = system;
+            const headers = {
+                'x-api-key': key,
+                'anthropic-version': '2023-06-01',
+                'anthropic-dangerous-direct-browser-access': 'true',
+                'content-type': 'application/json',
+            };
+            const res = await fetch('https://api.anthropic.com/v1/messages', {
+                method: 'POST', headers, body: JSON.stringify(body), signal,
+            });
+            if (!res.ok) {
+                const txt = await res.text().catch(() => '');
+                throw new Error(`HTTP ${res.status}: ${txt.slice(0, 400) || res.statusText}`);
+            }
+            if (!params.stream) {
+                const obj = await res.json();
+                const text = (obj.content || []).map(b => b.text || '').join('');
+                if (text) onToken(text);
+                if (obj.usage) onUsage({ in: obj.usage.input_tokens, out: obj.usage.output_tokens });
+                return;
+            }
+            let usage = { in: 0, out: 0 };
+            for await (const line of sseLines(res, signal)) {
+                if (!line.startsWith('data:')) continue;
+                const data = line.slice(5).trim();
+                if (!data) continue;
+                try {
+                    const obj = JSON.parse(data);
+                    if (obj.type === 'content_block_delta' && obj.delta?.text) {
+                        onToken(obj.delta.text);
+                    } else if (obj.type === 'message_start' && obj.message?.usage) {
+                        usage.in = obj.message.usage.input_tokens || 0;
+                    } else if (obj.type === 'message_delta' && obj.usage) {
+                        usage.out = obj.usage.output_tokens || usage.out;
+                    }
+                } catch {}
+            }
+            if (usage.in || usage.out) onUsage(usage);
+        },
+    },
+
+    google: {
+        async run({ model, system, user, params, signal, onToken, onUsage }) {
+            const key = State.keys.google;
+            if (!key) throw new Error('Missing Google AI API key. Add it in the API keys panel.');
+            const endpoint = params.stream ? 'streamGenerateContent' : 'generateContent';
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model.apiId}:${endpoint}?key=${encodeURIComponent(key)}${params.stream ? '&alt=sse' : ''}`;
+            const body = {
+                contents: [{ role: 'user', parts: [{ text: user }] }],
+                generationConfig: {
+                    temperature: params.temp,
+                    maxOutputTokens: params.maxTokens,
+                    topP: params.topP,
+                },
+            };
+            if (system) body.systemInstruction = { parts: [{ text: system }] };
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify(body),
+                signal,
+            });
+            if (!res.ok) {
+                const txt = await res.text().catch(() => '');
+                throw new Error(`HTTP ${res.status}: ${txt.slice(0, 400) || res.statusText}`);
+            }
+            if (!params.stream) {
+                const obj = await res.json();
+                const text = obj.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('') || '';
+                if (text) onToken(text);
+                if (obj.usageMetadata) onUsage({
+                    in: obj.usageMetadata.promptTokenCount || 0,
+                    out: obj.usageMetadata.candidatesTokenCount || 0,
+                });
+                return;
+            }
+            let usage = null;
+            for await (const line of sseLines(res, signal)) {
+                if (!line.startsWith('data:')) continue;
+                const data = line.slice(5).trim();
+                if (!data) continue;
+                try {
+                    const obj = JSON.parse(data);
+                    const text = obj.candidates?.[0]?.content?.parts?.map(p => p.text || '').join('');
+                    if (text) onToken(text);
+                    if (obj.usageMetadata) usage = {
+                        in: obj.usageMetadata.promptTokenCount || 0,
+                        out: obj.usageMetadata.candidatesTokenCount || 0,
+                    };
+                } catch {}
+            }
+            if (usage) onUsage(usage);
+        },
+    },
+
+    xai: {
+        async run({ model, system, user, params, signal, onToken, onUsage }) {
+            const key = State.keys.xai;
+            if (!key) throw new Error('Missing xAI API key. Add it in the API keys panel.');
+            const messages = [];
+            if (system) messages.push({ role: 'system', content: system });
+            messages.push({ role: 'user', content: user });
+            const body = {
+                model: model.apiId, messages,
+                temperature: params.temp, max_tokens: params.maxTokens, top_p: params.topP,
+                stream: params.stream,
+            };
+            if (params.stream) body.stream_options = { include_usage: true };
+            await streamOpenAICompatible({
+                url: 'https://api.x.ai/v1/chat/completions',
+                headers: { Authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+                body, signal, onToken, onUsage,
+            });
+        },
+    },
+
+    mistral: {
+        async run({ model, system, user, params, signal, onToken, onUsage }) {
+            const key = State.keys.mistral;
+            if (!key) throw new Error('Missing Mistral API key. Add it in the API keys panel.');
+            const messages = [];
+            if (system) messages.push({ role: 'system', content: system });
+            messages.push({ role: 'user', content: user });
+            const body = {
+                model: model.apiId, messages,
+                temperature: Math.min(params.temp, 1), max_tokens: params.maxTokens, top_p: params.topP,
+                stream: params.stream,
+            };
+            await streamOpenAICompatible({
+                url: 'https://api.mistral.ai/v1/chat/completions',
+                headers: { Authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+                body, signal, onToken, onUsage,
+            });
+        },
+    },
+
+    deepseek: {
+        async run({ model, system, user, params, signal, onToken, onUsage }) {
+            const key = State.keys.deepseek;
+            if (!key) throw new Error('Missing DeepSeek API key. Add it in the API keys panel.');
+            const messages = [];
+            if (system) messages.push({ role: 'system', content: system });
+            messages.push({ role: 'user', content: user });
+            const body = {
+                model: model.apiId, messages,
+                temperature: params.temp, max_tokens: params.maxTokens, top_p: params.topP,
+                stream: params.stream,
+            };
+            if (params.stream) body.stream_options = { include_usage: true };
+            await streamOpenAICompatible({
+                url: 'https://api.deepseek.com/chat/completions',
+                headers: { Authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+                body, signal, onToken, onUsage,
+            });
+        },
+    },
+
+    groq: {
+        async run({ model, system, user, params, signal, onToken, onUsage }) {
+            const key = State.keys.groq;
+            if (!key) throw new Error('Missing Groq API key. Add it in the API keys panel.');
+            const messages = [];
+            if (system) messages.push({ role: 'system', content: system });
+            messages.push({ role: 'user', content: user });
+            const body = {
+                model: model.apiId, messages,
+                temperature: params.temp, max_tokens: params.maxTokens, top_p: params.topP,
+                stream: params.stream,
+            };
+            if (params.stream) body.stream_options = { include_usage: true };
+            await streamOpenAICompatible({
+                url: 'https://api.groq.com/openai/v1/chat/completions',
+                headers: { Authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+                body, signal, onToken, onUsage,
+            });
+        },
+    },
+
+    cohere: {
+        async run({ model, system, user, params, signal, onToken, onUsage }) {
+            const key = State.keys.cohere;
+            if (!key) throw new Error('Missing Cohere API key. Add it in the API keys panel.');
+            const messages = [];
+            if (system) messages.push({ role: 'system', content: system });
+            messages.push({ role: 'user', content: user });
+            const body = {
+                model: model.apiId, messages,
+                temperature: params.temp, max_tokens: params.maxTokens, p: params.topP,
+                stream: params.stream,
+            };
+            const res = await fetch('https://api.cohere.com/v2/chat', {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${key}`, 'content-type': 'application/json' },
+                body: JSON.stringify(body),
+                signal,
+            });
+            if (!res.ok) {
+                const txt = await res.text().catch(() => '');
+                throw new Error(`HTTP ${res.status}: ${txt.slice(0, 400) || res.statusText}`);
+            }
+            if (!params.stream) {
+                const obj = await res.json();
+                const text = obj.message?.content?.map(c => c.text || '').join('') || '';
+                if (text) onToken(text);
+                if (obj.usage?.tokens) onUsage({
+                    in: obj.usage.tokens.input_tokens || 0,
+                    out: obj.usage.tokens.output_tokens || 0,
+                });
+                return;
+            }
+            for await (const line of sseLines(res, signal)) {
+                if (!line.startsWith('data:')) continue;
+                const data = line.slice(5).trim();
+                if (!data) continue;
+                try {
+                    const obj = JSON.parse(data);
+                    if (obj.type === 'content-delta') {
+                        const text = obj.delta?.message?.content?.text;
+                        if (text) onToken(text);
+                    } else if (obj.type === 'message-end' && obj.delta?.usage?.tokens) {
+                        onUsage({
+                            in: obj.delta.usage.tokens.input_tokens || 0,
+                            out: obj.delta.usage.tokens.output_tokens || 0,
+                        });
+                    }
+                } catch {}
+            }
+        },
+    },
+
+    openrouter: {
+        async run({ model, system, user, params, signal, onToken, onUsage }) {
+            const key = State.keys.openrouter;
+            if (!key) throw new Error('Missing OpenRouter API key. Add it in the API keys panel.');
+            const messages = [];
+            if (system) messages.push({ role: 'system', content: system });
+            messages.push({ role: 'user', content: user });
+            const body = {
+                model: model.apiId, messages,
+                temperature: params.temp, max_tokens: params.maxTokens, top_p: params.topP,
+                stream: params.stream,
+                usage: { include: true },
+            };
+            await streamOpenAICompatible({
+                url: 'https://openrouter.ai/api/v1/chat/completions',
+                headers: {
+                    Authorization: `Bearer ${key}`,
+                    'content-type': 'application/json',
+                    'HTTP-Referer': 'https://freeprompttester.app',
+                    'X-Title': 'Free AI Prompt Tester',
+                },
+                body, signal, onToken, onUsage,
+            });
+        },
+    },
+};
+
+/* ============================================================
+   UI — model picker
+   ============================================================ */
+
+const TABS = [
+    { id: 'popular', label: 'Popular' },
+    ...PROVIDER_ORDER.map(p => ({ id: p, label: PROVIDER_INFO[p].name })),
+    { id: 'all', label: 'All' },
+];
+
+function renderTabs() {
+    const el = document.getElementById('modelTabs');
+    el.innerHTML = '';
+    for (const t of TABS) {
+        const btn = document.createElement('button');
+        btn.className = 'tab-btn' + (t.id === State.activeTab ? ' active' : '');
+        btn.textContent = t.label;
+        btn.addEventListener('click', () => {
+            State.activeTab = t.id;
+            renderTabs();
+            renderModels();
+        });
+        el.appendChild(btn);
+    }
+}
+
+function modelsForTab() {
+    if (State.activeTab === 'all') return MODELS;
+    if (State.activeTab === 'popular') return MODELS.filter(m => m.popular);
+    return MODELS.filter(m => m.provider === State.activeTab);
+}
+
+function renderModels() {
+    const grid = document.getElementById('modelGrid');
+    grid.innerHTML = '';
+    const list = modelsForTab();
+    for (const m of list) {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'model-chip';
+        const isSelected = State.selected.includes(m.id);
+        if (isSelected) chip.classList.add('selected');
+        const hasKey = !!State.keys[m.provider];
+        chip.innerHTML = `
+            <span>${m.label}</span>
+            <span class="provider-pill">${m.provider}</span>
+            ${!hasKey ? '<span class="key-warn" title="Add API key">●</span>' : ''}
+        `;
+        chip.addEventListener('click', () => toggleModel(m.id));
+        grid.appendChild(chip);
+    }
+    document.getElementById('selectedCount').textContent = State.selected.length;
+    document.getElementById('modelCount').textContent = `${State.selected.length} selected · max 6`;
+}
+
+function toggleModel(id) {
+    const idx = State.selected.indexOf(id);
+    if (idx >= 0) {
+        State.selected.splice(idx, 1);
+    } else {
+        if (State.selected.length >= 6) {
+            showToast('Max 6 models. Remove one first.');
+            return;
+        }
+        State.selected.push(id);
+    }
+    saveSelected();
+    renderModels();
+}
+
+/* ============================================================
+   UI — keys modal
+   ============================================================ */
+function renderKeys() {
+    const list = document.getElementById('keysList');
+    list.innerHTML = '';
+    for (const p of PROVIDER_ORDER) {
+        const info = PROVIDER_INFO[p];
+        const row = document.createElement('div');
+        row.className = 'key-row';
+        const note = p === 'openrouter' ? '<span style="font-size:11px;color:var(--text-muted)">Single key for OpenAI + 200 more</span>' : '';
+        row.innerHTML = `
+            <label>
+                <span>${info.name} ${note}</span>
+                <a href="${info.keyUrl}" target="_blank" rel="noopener">Get key →</a>
+            </label>
+            <div class="key-input-wrap">
+                <input class="input input-mono" type="password" data-key="${p}" value="${(State.keys[p] || '').replace(/"/g, '&quot;')}" placeholder="${p === 'anthropic' ? 'sk-ant-...' : p === 'openrouter' ? 'sk-or-...' : 'API key'}" autocomplete="off">
+                <button class="btn btn-secondary" data-show="${p}" type="button">👁</button>
+                <button class="btn btn-secondary" data-test="${p}" type="button">Test</button>
+            </div>
+            <div class="key-status" data-status="${p}"></div>
+        `;
+        list.appendChild(row);
+    }
+    list.querySelectorAll('button[data-show]').forEach(b => {
+        b.addEventListener('click', () => {
+            const provider = b.dataset.show;
+            const input = list.querySelector(`input[data-key="${provider}"]`);
+            input.type = input.type === 'password' ? 'text' : 'password';
+        });
+    });
+    list.querySelectorAll('button[data-test]').forEach(b => {
+        b.addEventListener('click', () => testKey(b.dataset.test, list));
+    });
+}
+
+async function testKey(provider, list) {
+    const input = list.querySelector(`input[data-key="${provider}"]`);
+    const status = list.querySelector(`[data-status="${provider}"]`);
+    const key = input.value.trim();
+    if (!key) {
+        status.textContent = 'No key entered.';
+        status.className = 'key-status bad';
+        return;
+    }
+    status.textContent = 'Testing…';
+    status.className = 'key-status';
+    const tempKeys = { ...State.keys, [provider]: key };
+    const oldKeys = State.keys;
+    State.keys = tempKeys;
+    try {
+        const model = MODELS.find(m => m.provider === provider);
+        if (!model) throw new Error('No model defined for provider');
+        let gotToken = false;
+        const ctrl = new AbortController();
+        await PROVIDERS[provider].run({
+            model, system: '', user: 'Reply with the single word: OK',
+            params: { temp: 0, maxTokens: 5, topP: 1, stream: false },
+            signal: ctrl.signal,
+            onToken: () => { gotToken = true; },
+            onUsage: () => {},
+        });
+        status.textContent = gotToken ? 'OK' : 'Connected (no content)';
+        status.className = 'key-status ok';
+    } catch (e) {
+        status.textContent = 'Failed: ' + (e.message || 'unknown error').slice(0, 160);
+        status.className = 'key-status bad';
+    } finally {
+        State.keys = oldKeys;
+    }
+}
+
+function openKeys() {
+    renderKeys();
+    document.getElementById('keysModal').classList.add('open');
+}
+function closeKeys() {
+    document.getElementById('keysModal').classList.remove('open');
+}
+function saveKeysFromModal() {
+    const list = document.getElementById('keysList');
+    list.querySelectorAll('input[data-key]').forEach(input => {
+        const k = input.value.trim();
+        if (k) State.keys[input.dataset.key] = k;
+        else delete State.keys[input.dataset.key];
+    });
+    saveKeys();
+    updateKeyCount();
+    renderModels();
+    closeKeys();
+    showToast('Keys saved.');
+}
+function clearAllKeys() {
+    if (!confirm('Clear all API keys from this browser?')) return;
+    State.keys = {};
+    saveKeys();
+    updateKeyCount();
+    renderKeys();
+    renderModels();
+    showToast('Keys cleared.');
+}
+function updateKeyCount() {
+    document.getElementById('keyCount').textContent = Object.keys(State.keys).length;
+}
+
+/* ============================================================
+   UI — result cards + run logic
+   ============================================================ */
+
+function emptyStateVisible(visible) {
+    document.getElementById('emptyState').style.display = visible ? '' : 'none';
+}
+
+function makeCard(model) {
+    const card = document.createElement('div');
+    card.className = 'result-card';
+    card.dataset.model = model.id;
+    card.innerHTML = `
+        <div class="result-header">
+            <div>
+                <span class="result-title">${model.label}</span>
+                <span class="result-provider">${model.provider}</span>
+            </div>
+            <div class="result-actions">
+                <span class="status-pill"><span class="dot"></span><span class="status-label">Queued</span></span>
+                <button class="icon-action" data-act="pin" title="Pin">📌</button>
+                <button class="icon-action" data-act="copy" title="Copy">⧉</button>
+                <button class="icon-action" data-act="regen" title="Regenerate">↻</button>
+                <button class="icon-action" data-act="stop" title="Stop">■</button>
+            </div>
+        </div>
+        <div class="result-body empty">Waiting…</div>
+        <div class="result-footer">
+            <span><strong class="ttft">—</strong> TTFT</span>
+            <span><strong class="latency">—</strong> total</span>
+            <span><strong class="tokens">—</strong> tokens</span>
+            <span><strong class="cost">$0.0000</strong></span>
+        </div>
+    `;
+    card.querySelector('[data-act="copy"]').addEventListener('click', () => copyCard(model.id));
+    card.querySelector('[data-act="regen"]').addEventListener('click', () => regenCard(model.id));
+    card.querySelector('[data-act="stop"]').addEventListener('click', () => stopCard(model.id));
+    card.querySelector('[data-act="pin"]').addEventListener('click', (e) => {
+        card.classList.toggle('pinned');
+        e.currentTarget.classList.toggle('active');
+    });
+    return card;
+}
+
+function setCardStatus(card, status, label) {
+    const pill = card.querySelector('.status-pill');
+    pill.classList.remove('streaming', 'done', 'error');
+    if (status) pill.classList.add(status);
+    pill.querySelector('.status-label').textContent = label;
+}
+
+function copyCard(modelId) {
+    const card = document.querySelector(`.result-card[data-model="${CSS.escape(modelId)}"]`);
+    if (!card) return;
+    const body = card.querySelector('.result-body');
+    if (body.classList.contains('empty')) return;
+    navigator.clipboard.writeText(body.textContent).then(() => showToast('Copied output')).catch(() => showToast('Copy failed'));
+}
+
+function stopCard(modelId) {
+    const run = State.runs.get(modelId);
+    if (run && run.controller) run.controller.abort();
+}
+
+function regenCard(modelId) {
+    const m = MODELS.find(x => x.id === modelId);
+    if (!m) return;
+    runOne(m);
+}
+
+function getParams() {
+    const tempEl = document.getElementById('paramTemp');
+    const maxTok = document.getElementById('paramMaxTokens');
+    const topP = document.getElementById('paramTopP');
+    const stream = document.getElementById('paramStream');
+    return {
+        temp: parseFloat(tempEl.value) || 0,
+        maxTokens: parseInt(maxTok.value) || 1024,
+        topP: parseFloat(topP.value) || 1,
+        stream: stream.value === '1',
+    };
+}
+
+function getPrompts() {
+    return {
+        system: document.getElementById('systemPrompt').value.trim(),
+        user: document.getElementById('userPrompt').value.trim(),
+    };
+}
+
+async function runOne(model) {
+    const grid = document.getElementById('resultsGrid');
+    let card = grid.querySelector(`.result-card[data-model="${CSS.escape(model.id)}"]`);
+    if (!card) {
+        card = makeCard(model);
+        grid.appendChild(card);
+    }
+    const body = card.querySelector('.result-body');
+    body.classList.remove('empty');
+    body.textContent = '';
+    body.querySelectorAll('.result-error').forEach(e => e.remove());
+    setCardStatus(card, 'streaming', 'Streaming');
+    card.querySelector('.ttft').textContent = '—';
+    card.querySelector('.latency').textContent = '—';
+    card.querySelector('.tokens').textContent = '—';
+    card.querySelector('.cost').textContent = '$0.0000';
+
+    const { system, user } = getPrompts();
+    if (!user) {
+        setCardStatus(card, 'error', 'No prompt');
+        body.innerHTML = '<div class="result-error">Enter a user prompt above.</div>';
+        return;
+    }
+    const params = getParams();
+    const controller = new AbortController();
+    const startTime = performance.now();
+    let firstTokenTime = null;
+    let outputText = '';
+    let usage = null;
+
+    State.runs.set(model.id, { controller, startTime, card, output: '' });
+
+    const onToken = (chunk) => {
+        if (firstTokenTime === null) {
+            firstTokenTime = performance.now();
+            card.querySelector('.ttft').textContent = ((firstTokenTime - startTime) / 1000).toFixed(2) + 's';
+        }
+        outputText += chunk;
+        body.textContent = outputText;
+        body.scrollTop = body.scrollHeight;
+    };
+    const onUsage = (u) => {
+        usage = u;
+        card.querySelector('.tokens').textContent = `${u.in}/${u.out}`;
+        const cost = (u.in * model.priceIn + u.out * model.priceOut) / 1000000;
+        card.querySelector('.cost').textContent = formatCost(cost);
+    };
+
+    try {
+        await PROVIDERS[model.provider].run({
+            model, system, user, params, signal: controller.signal, onToken, onUsage,
+        });
+        const total = ((performance.now() - startTime) / 1000).toFixed(2);
+        card.querySelector('.latency').textContent = total + 's';
+        if (!usage && outputText) {
+            const estIn = Math.round((system.length + user.length) / 4);
+            const estOut = Math.round(outputText.length / 4);
+            card.querySelector('.tokens').textContent = `~${estIn}/${estOut}`;
+            const cost = (estIn * model.priceIn + estOut * model.priceOut) / 1000000;
+            card.querySelector('.cost').textContent = formatCost(cost);
+        }
+        setCardStatus(card, 'done', outputText ? 'Done' : 'Empty');
+        if (!outputText) {
+            body.classList.add('empty');
+            body.textContent = 'No content returned.';
+        }
+    } catch (e) {
+        const aborted = e.name === 'AbortError' || controller.signal.aborted;
+        setCardStatus(card, aborted ? 'error' : 'error', aborted ? 'Stopped' : 'Error');
+        if (!outputText) body.classList.add('empty');
+        const errEl = document.createElement('div');
+        errEl.className = 'result-error';
+        errEl.textContent = aborted ? 'Stopped by user.' : (e.message || 'Request failed');
+        card.insertBefore(errEl, card.querySelector('.result-footer'));
+        const total = ((performance.now() - startTime) / 1000).toFixed(2);
+        card.querySelector('.latency').textContent = total + 's';
+    } finally {
+        State.runs.delete(model.id);
+        updateRunBar();
+    }
+}
+
+async function runAll() {
+    const { user } = getPrompts();
+    if (!user) {
+        showToast('Enter a user prompt first.');
+        return;
+    }
+    if (State.selected.length === 0) {
+        showToast('Select at least one model.');
+        return;
+    }
+    saveLastPrompt();
+    emptyStateVisible(false);
+    document.getElementById('resultsGrid').innerHTML = '';
+    document.getElementById('runStatus').textContent = `Running ${State.selected.length}…`;
+    document.getElementById('runBtn').disabled = true;
+    document.getElementById('stopBtn').disabled = false;
+
+    const models = State.selected.map(id => MODELS.find(m => m.id === id)).filter(Boolean);
+    await Promise.allSettled(models.map(m => runOne(m)));
+
+    document.getElementById('runStatus').textContent = '';
+    document.getElementById('runBtn').disabled = false;
+    document.getElementById('stopBtn').disabled = true;
+    updateRunBar();
+}
+
+function stopAll() {
+    for (const run of State.runs.values()) {
+        try { run.controller.abort(); } catch {}
+    }
+}
+
+function updateRunBar() {
+    const grid = document.getElementById('resultsGrid');
+    let total = 0;
+    grid.querySelectorAll('.cost').forEach(el => {
+        const m = el.textContent.match(/\$([\d.]+)/);
+        if (m) total += parseFloat(m[1]) || 0;
+    });
+    document.getElementById('costMeter').textContent = formatCost(total);
+}
+
+/* ============================================================
+   Prompt meta + crash recovery
+   ============================================================ */
+function updatePromptMeta() {
+    const usr = document.getElementById('userPrompt').value;
+    const chars = usr.length;
+    const words = usr.trim() ? usr.trim().split(/\s+/).length : 0;
+    document.getElementById('promptMeta').textContent = `${chars} chars · ${words} words`;
+}
+
+const EXAMPLES = [
+    { sys: 'You are a precise reasoner. Show your steps briefly, then give the answer.', usr: 'Two trains leave stations 200 km apart, heading toward each other. One travels at 80 km/h, the other at 70 km/h. How many minutes until they meet?' },
+    { sys: 'You are a senior code reviewer.', usr: 'Review this snippet for bugs and propose a fix:\n\nfunction sum(arr) {\n  let total;\n  for (let i = 0; i <= arr.length; i++) total += arr[i];\n  return total;\n}' },
+    { sys: 'You are a precise factual assistant. If you are not sure, say so.', usr: 'In one sentence each: who painted Las Meninas, when was Suez Canal opened, and what is the speed of light in a vacuum?' },
+    { sys: '', usr: 'Write a 4-line poem about a lighthouse, with an internal rhyme on lines 2 and 3.' },
+    { sys: 'You are a careful product strategist.', usr: 'A solo dev runs a free utility tool with 2k visits/day. Pitch three monetization paths in one paragraph each, with one risk per path.' },
+];
+
+function loadExample() {
+    const ex = EXAMPLES[Math.floor(Math.random() * EXAMPLES.length)];
+    const sysToggle = document.getElementById('systemToggle');
+    const sysWrap = document.getElementById('systemWrap');
+    document.getElementById('systemPrompt').value = ex.sys;
+    document.getElementById('userPrompt').value = ex.usr;
+    if (ex.sys) {
+        sysToggle.classList.add('open');
+        sysWrap.classList.add('open');
+    }
+    updatePromptMeta();
+    saveLastPrompt();
+}
+
+function clearAllOutputs() {
+    stopAll();
+    document.getElementById('resultsGrid').innerHTML = '';
+    document.getElementById('costMeter').textContent = '$0.0000';
+    emptyStateVisible(true);
+}
+
+/* ============================================================
+   Init
+   ============================================================ */
+(function init() {
+    renderTabs();
+    renderModels();
+    updateKeyCount();
+    restoreLastPrompt();
+    updatePromptMeta();
+
+    document.getElementById('keysBtn').addEventListener('click', openKeys);
+    document.getElementById('keysClose').addEventListener('click', closeKeys);
+    document.getElementById('keysModal').addEventListener('click', (e) => {
+        if (e.target.id === 'keysModal') closeKeys();
+    });
+    document.getElementById('saveKeysBtn').addEventListener('click', saveKeysFromModal);
+    document.getElementById('clearKeysBtn').addEventListener('click', clearAllKeys);
+
+    const sysToggle = document.getElementById('systemToggle');
+    const sysWrap = document.getElementById('systemWrap');
+    sysToggle.addEventListener('click', () => {
+        sysToggle.classList.toggle('open');
+        sysWrap.classList.toggle('open');
+    });
+
+    document.getElementById('userPrompt').addEventListener('input', () => {
+        updatePromptMeta();
+        saveLastPrompt();
+    });
+    document.getElementById('systemPrompt').addEventListener('input', saveLastPrompt);
+
+    document.getElementById('runBtn').addEventListener('click', runAll);
+    document.getElementById('stopBtn').addEventListener('click', stopAll);
+    document.getElementById('clearBtn').addEventListener('click', clearAllOutputs);
+    document.getElementById('exampleBtn').addEventListener('click', loadExample);
+
+    document.addEventListener('keydown', (e) => {
+        const mod = e.metaKey || e.ctrlKey;
+        if (mod && e.key === 'Enter') { e.preventDefault(); runAll(); }
+        else if (mod && e.key === '.') { e.preventDefault(); stopAll(); }
+        else if (mod && e.shiftKey && (e.key === 'K' || e.key === 'k')) { e.preventDefault(); openKeys(); }
+        else if (e.key === 'Escape' && document.getElementById('keysModal').classList.contains('open')) { closeKeys(); }
+    });
+
+    // Save model selection updates
+    document.getElementById('paramTemp').addEventListener('change', () => localStorage.setItem('prompttester_temp', document.getElementById('paramTemp').value));
+    document.getElementById('paramMaxTokens').addEventListener('change', () => localStorage.setItem('prompttester_max_tokens', document.getElementById('paramMaxTokens').value));
+    document.getElementById('paramTopP').addEventListener('change', () => localStorage.setItem('prompttester_top_p', document.getElementById('paramTopP').value));
+    document.getElementById('paramStream').addEventListener('change', () => localStorage.setItem('prompttester_stream', document.getElementById('paramStream').value));
+
+    // Restore params
+    const t = localStorage.getItem('prompttester_temp');
+    if (t) document.getElementById('paramTemp').value = t;
+    const mt = localStorage.getItem('prompttester_max_tokens');
+    if (mt) document.getElementById('paramMaxTokens').value = mt;
+    const tp = localStorage.getItem('prompttester_top_p');
+    if (tp) document.getElementById('paramTopP').value = tp;
+    const sm = localStorage.getItem('prompttester_stream');
+    if (sm) document.getElementById('paramStream').value = sm;
+})();
+</script>
+</body>
+</html>

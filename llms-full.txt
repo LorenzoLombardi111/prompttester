@@ -1,0 +1,256 @@
+# freeprompttester.app — Full text
+
+> Free, browser-based AI prompt tester. Run the same prompt across GPT, Claude, Gemini, Grok, DeepSeek, Mistral, Cohere and Groq-hosted Llama in parallel — side by side — using your own API keys. Streams every response with live latency, token usage and per-call cost. Static page, no proxy, keys never leave the browser.
+
+---
+
+## Home
+
+### AI Prompt Tester — Compare GPT, Claude, Gemini and More Side by Side
+
+freeprompttester.app is a free, browser-based playground for running the same prompt across multiple AI models in parallel. You paste your own API keys for the providers you want to test, write a system and user prompt, pick up to six models from any combination of OpenAI (via OpenRouter), Anthropic, Google, xAI, Mistral, DeepSeek, Cohere and Groq, and watch each provider stream its response into its own card with time-to-first-token, total latency, token usage and per-call cost shown live.
+
+Everything runs client-side. Your prompts and API keys are sent directly from your browser to each provider. No proxy server, no Freesuite middleman, no logging — you can verify it in the Network tab in your browser's developer tools.
+
+### How does freeprompttester.app compare AI models?
+
+freeprompttester.app fans out parallel `fetch()` calls to each selected provider's chat completion endpoint when you click Run. Each response streams into its own card so you can read them as they arrive, side by side. After every call finishes, freeprompttester.app reads the input and output token counts returned by the provider and multiplies them by published per-million rates to show the exact cost of each call.
+
+### Why count tokens before sending a prompt?
+
+Different models price input and output tokens differently, and the same English text can become 1.0× tokens on GPT-5, 0.95× on Claude Opus 4.7, and 1.6× on a Llama-based model. Without comparing them side by side, it is hard to know which model gives the best output-per-dollar for your specific workload. freeprompttester.app shows you the answer in one run.
+
+### Is freeprompttester.app free and private?
+
+Yes. freeprompttester.app is free to use, has no sign-up, no ads and no tracking. Provider API costs are billed by each provider directly — Freesuite never sees the prompt, the response or the key. The page is a static HTML/CSS/JS bundle that runs in your browser; the only network traffic is the streamed response from each AI provider you select.
+
+### How accurate are the cost numbers?
+
+Cost is computed from the token counts each provider returns at the end of the call (or in the streaming usage metadata) multiplied by the model's published per-million input and output rates. For models that don't return usage data in the stream, freeprompttester.app falls back to a calibrated character-based estimate — clearly labeled. Always check live pricing for production budgeting.
+
+### AI Model Comparison Matrix
+
+| Model | Provider | Context | Input $/M | Output $/M | Access |
+|---|---|---|---|---|---|
+| Claude Opus 4.7 | Anthropic | 1M | $15 | $75 | Direct |
+| Claude Sonnet 4.6 | Anthropic | 1M | $3 | $15 | Direct |
+| Claude Haiku 4.5 | Anthropic | 200K | $1 | $5 | Direct |
+| Gemini 2.5 Pro | Google | 1M | $1.25 | $10 | Direct |
+| Gemini 2.5 Flash | Google | 1M | $0.30 | $2.50 | Direct |
+| Grok 4 | xAI | 256K | $5 | $15 | Direct |
+| Grok 4 Fast | xAI | 2M | $0.20 | $0.50 | Direct |
+| GPT-5 | OpenAI | 400K | $1.25 | $10 | OpenRouter |
+| GPT-5 mini | OpenAI | 400K | $0.25 | $2 | OpenRouter |
+| GPT-4.1 | OpenAI | 1M | $3 | $12 | OpenRouter |
+| DeepSeek V3.1 | DeepSeek | 128K | $0.27 | $1.10 | Direct |
+| DeepSeek R1 | DeepSeek | 128K | $0.55 | $2.19 | Direct |
+| Mistral Large 2 | Mistral | 128K | $2 | $6 | Direct |
+| Llama 4 Scout 17B | Groq | 128K | $0.11 | $0.34 | Direct |
+| Llama 3.3 70B | Groq | 128K | $0.59 | $0.79 | Direct |
+| Command A | Cohere | 256K | $2.50 | $10 | Direct |
+
+Prices last updated 2026-05-04. Always verify with each provider's pricing page.
+
+### Why use freeprompttester.app?
+
+- **Bring your own keys** — One key per provider. They live in localStorage, never on a server.
+- **True parallel runs** — Up to six models stream side by side. See TTFT, latency, tokens and cost.
+- **No proxy, no logging** — Static HTML page. Calls go browser → provider directly.
+- **Honest about OpenAI** — OpenAI blocks browser calls. We say so and route GPT through OpenRouter.
+
+### How it works
+
+1. **Add your API keys.** Click "API keys" in the header. Paste a key for each provider you want to use. Keys are stored in your browser's localStorage and used only for direct provider calls.
+2. **Write your prompt.** Enter a system prompt (optional) and a user prompt. Adjust temperature, max tokens and top-p if needed.
+3. **Pick up to six models.** Click chips to select. Models from providers without keys are visually marked.
+4. **Run.** Each model streams its answer into its own card with live token count, time-to-first-token, total latency and per-call cost.
+
+### Frequently Asked Questions
+
+**What is freeprompttester.app?**
+freeprompttester.app is a free, browser-based playground that runs the same prompt across multiple AI models in parallel. You paste your own API keys, write a prompt, pick which models to test, and watch each provider stream its response into its own card with latency, token usage and cost shown live. Everything runs client-side — keys and prompts never leave your browser.
+
+**Which models does freeprompttester.app support?**
+freeprompttester.app supports Anthropic (Claude Opus 4.7, Sonnet 4.6, Haiku 4.5), Google (Gemini 2.5 Pro, 2.5 Flash, 2.0 Flash), xAI (Grok 4, Grok 4 Fast, Grok 3), Mistral (Large 2, Medium 3, Small 3.1), DeepSeek (V3.1, R1), Groq-hosted Llama (Llama 4 Scout, 3.3 70B, 3.1 8B) and Cohere (Command A, R+, R) via direct browser calls, plus OpenAI's GPT-5, GPT-5 mini, GPT-4.1, o4-mini and any other model via OpenRouter.
+
+**Why does freeprompttester.app use OpenRouter for OpenAI?**
+OpenAI's API blocks direct browser calls (no CORS headers) so a static page like freeprompttester.app cannot call it without a proxy server. OpenRouter is a paid relay that does support browser calls and gives you access to OpenAI's models with a single key. Using OpenRouter keeps freeprompttester.app fully serverless while still letting you compare GPT-5 against everything else.
+
+**Where are my API keys stored?**
+API keys you paste into freeprompttester.app are saved in your browser's localStorage and used only to make requests directly from your browser to each provider. They never touch a Freesuite server. Anyone with access to your browser can read localStorage, so do not enter keys on a shared or public computer. Use the Clear all keys button to wipe them at any time.
+
+**Is my prompt sent to Freesuite?**
+No. freeprompttester.app is a static page. Your prompt is sent only to the AI providers you select, directly from your browser. There is no Freesuite server in the request path, no logging, and no analytics on input. You can verify this by watching the Network tab in your browser's developer tools while running a prompt.
+
+**How does freeprompttester.app calculate cost?**
+After each response finishes, freeprompttester.app reads the input and output token counts returned by the provider and multiplies them by the model's published per-million input and output rates. The cost shown per card is the cost of that single call. The run bar adds them up across all selected models so you can see total spend per run.
+
+**Can I compare more than two models at once?**
+Yes. freeprompttester.app lets you select up to six models per run. They stream in parallel into a responsive grid (two columns on desktop, one on mobile). Six is the soft cap to keep the UI scannable; for larger sweeps, run two batches and compare the saved JSON exports.
+
+**Does freeprompttester.app support streaming?**
+Yes. Every supported provider streams responses as they generate, and freeprompttester.app renders tokens as they arrive. Time-to-first-token is shown next to each card so you can see how fast each model starts producing output, not just total latency. Streaming can be disabled in settings if you prefer one-shot responses.
+
+---
+
+## /vs-openai-playground
+
+### OpenAI Playground Alternative — Test GPT, Claude, Gemini and More Side by Side
+
+The OpenAI Playground is a great tool — for testing OpenAI models. The moment you want to compare GPT-5 against Claude Opus 4.7 or Gemini 2.5 Pro, you have to open three tabs, paste the same prompt three times, and reconcile the latency and cost numbers in your head. freeprompttester.app fixes that. It is a free, browser-based playground that runs the same prompt across up to six models from any combination of OpenAI (via OpenRouter), Anthropic, Google, xAI, Mistral, DeepSeek, Cohere and Groq, and streams every response into its own card with TTFT, latency, token usage and per-call cost shown live.
+
+Like the OpenAI Playground, freeprompttester.app needs no sign-up — you bring your own API keys, which never leave the browser. Unlike the OpenAI Playground, it works for every major provider in a single screen.
+
+### freeprompttester.app vs OpenAI Playground
+
+| Feature | freeprompttester.app | OpenAI Playground |
+|---|---|---|
+| Models supported | 25+ across 8 providers | OpenAI only |
+| Side-by-side runs | Up to 6 in parallel | One at a time |
+| Streamed output | Yes, with TTFT | Yes |
+| Per-call cost shown | Yes, live | No |
+| Sign-up required | No (BYO key) | Yes (OpenAI account) |
+| Server-side proxy | None — browser ↔ provider directly | OpenAI servers |
+| Where keys live | localStorage in your browser | OpenAI account |
+| Price | Free (you pay providers directly) | Free + per-token API spend |
+| Offline | Yes (PWA shell) | No |
+
+### Why use freeprompttester.app instead?
+
+If you build with multiple providers — or are deciding which one to commit to — single-vendor playgrounds force you to do the comparison manually. freeprompttester.app turns "compare three models on one prompt" into a single click. Outputs stream in parallel, TTFT lets you see how fast each model starts producing text, and the cost field tells you exactly what each call cost so you can spot which model is best per dollar for your specific workload.
+
+### What about OpenAI's CORS limitation?
+
+OpenAI's API blocks direct browser calls — if you POST to api.openai.com from a static page, the browser refuses on CORS grounds. That is why so many "playground" tools run a proxy server (and see your keys and prompts). freeprompttester.app skirts this by routing OpenAI requests through OpenRouter, which does support browser calls and offers GPT-5, GPT-5 mini, GPT-4.1 and o4-mini under a single key. The other seven providers freeprompttester.app supports (Anthropic, Google, xAI, Mistral, DeepSeek, Groq, Cohere) all permit direct browser API-key calls, so those go straight from your browser to the provider.
+
+---
+
+## /compare-claude-vs-gpt
+
+### Compare Claude vs GPT Side by Side — Live Output, Latency, Tokens, Cost
+
+Choosing between Claude and GPT for a workload is rarely a single-axis decision. One model writes more concisely; the other reasons through edge cases more reliably; one is cheaper at high volume; the other is faster to first token. The only honest way to pick is to run your own representative prompts against both and read the outputs side by side. freeprompttester.app makes that a one-click comparison: paste your Anthropic key, paste an OpenRouter key (which gives you GPT-5), pick Claude Opus 4.7 and GPT-5 from the model picker, hit Run, and watch both stream into adjacent cards with TTFT, total latency, input/output tokens and per-call cost shown live.
+
+### Claude Opus 4.7 vs GPT-5 — at a glance
+
+| Spec | Claude Opus 4.7 | GPT-5 (via OpenRouter) |
+|---|---|---|
+| Context window | 1,000,000 tokens | 400,000 tokens |
+| Input price | $15 per 1M | $1.25 per 1M |
+| Output price | $75 per 1M | $10 per 1M |
+| Strengths | Long-context reasoning, code review, careful analysis | Speed, broad world knowledge, instruction following |
+| Direct browser call | Yes | No — via OpenRouter |
+
+### How to compare Claude and GPT with freeprompttester.app
+
+1. Open freeprompttester.app and click **API keys** in the header.
+2. Paste your Anthropic key (sk-ant-…) and your OpenRouter key (sk-or-…). Click "Test" on each row to verify.
+3. Write a system prompt (optional) and the user prompt you want to test.
+4. In the Models panel, switch to the **Popular** tab and click both Claude Opus 4.7 and GPT-5 (OpenRouter).
+5. Hit **Run**. Both cards stream simultaneously. Read the outputs, compare TTFT and cost.
+
+### What to actually compare
+
+Don't just read the answers. Look at:
+
+- **TTFT** — time-to-first-token. If you're building chat UI, this matters more than total latency. GPT-5 typically lands faster on the first token; Claude Opus often catches up on long generations.
+- **Tokens out** — terser is usually better. If two answers are equally good but one uses half the tokens, that one is also half the cost.
+- **Cost per call** — shown in the card footer. Multiply by your volume to see whether the more expensive model justifies itself.
+- **Output quality** — judged by you, on your prompt, in your domain. That's the whole point.
+
+### Tips for fair comparisons
+
+Use the same temperature and max-tokens for both. Run the same prompt twice on each model to see variance. For long-context tests, paste a large document into the system prompt and ask a needle-in-haystack question — Claude Opus's 1M context window can hold things GPT-5 can't.
+
+---
+
+## /gemini-prompt-tester
+
+### Gemini Prompt Tester — Test Gemini 2.5 Pro and Flash in Your Browser
+
+freeprompttester.app is a free, browser-based prompt tester that talks to the Gemini API directly using your Google AI key. It supports Gemini 2.5 Pro, Gemini 2.5 Flash, and Gemini 2.0 Flash, and lets you compare any of them against Claude, GPT (via OpenRouter), Grok, Mistral, DeepSeek, Llama (Groq) and Cohere in the same run. Outputs stream into side-by-side cards with TTFT, latency, input/output tokens, and per-call cost. No sign-up, no proxy, no Freesuite servers in the request path.
+
+### Gemini models supported
+
+| Model | Context | Input $/M | Output $/M | Best for |
+|---|---|---|---|---|
+| Gemini 2.5 Pro | 1M | $1.25 | $10 | Long context, reasoning, multimodal |
+| Gemini 2.5 Flash | 1M | $0.30 | $2.50 | Fast, cheap, high volume |
+| Gemini 2.0 Flash | 1M | $0.10 | $0.40 | Cheapest tier |
+
+### How to use Gemini in freeprompttester.app
+
+1. Get a free Google AI API key from aistudio.google.com/app/apikey.
+2. Open freeprompttester.app, click **API keys**, paste your key into the Google AI row, click **Test**.
+3. In the Models panel, switch to the **Google AI** tab and pick the Gemini variant you want.
+4. Write your prompt and hit **Run**. Streamed output appears in a card with cost calculated from Google's reported token counts.
+
+### Why test Gemini in a multi-provider tester?
+
+Each model has a tokenization style and reasoning bias that show up immediately when you put outputs side by side. Gemini 2.5 Pro is exceptionally strong on long-document QA thanks to its 1M context window, but tends to be more verbose than Claude on the same prompt. Gemini 2.5 Flash is the most cost-effective fast model in this class. The only way to know whether Gemini fits your specific use case is to A/B it against the alternatives — freeprompttester.app makes that one click.
+
+### What "direct browser call" means for Gemini
+
+The Gemini API supports `?key=` query-string authentication and CORS, so freeprompttester.app calls generativelanguage.googleapis.com directly from your browser. No proxy server. You can verify by watching the Network tab while running a prompt — the only outbound request goes to Google's domain.
+
+---
+
+## /how-to-compare-llm-outputs
+
+### How to Compare LLM Outputs Across Providers
+
+Most LLM benchmarks tell you how a model performed on someone else's prompts. The only benchmark that matters for your project is how each model handles your prompts. freeprompttester.app is a free browser tool for running side-by-side LLM comparisons — same prompt, multiple providers, parallel streamed responses with latency, token usage and per-call cost shown live. Here is the practical workflow.
+
+### What to measure when comparing LLM outputs
+
+- **Output quality** — judged on your task. Have a clear definition: is shorter better, is structured output better, does factual accuracy matter more than tone?
+- **Time-to-first-token (TTFT)** — for interactive UIs, this is what users feel as "fast" or "slow." freeprompttester.app shows TTFT next to total latency on every card.
+- **Total latency** — for batch jobs and one-shot tasks where the user waits for the complete response.
+- **Tokens out / tokens in** — terse outputs are cheaper and often clearer. Two equally good responses where one uses half the output tokens means half the cost.
+- **Cost per call** — input tokens × per-million input rate + output tokens × per-million output rate. freeprompttester.app computes this from each provider's reported usage.
+- **Variance** — temperature > 0 means the same prompt gives different answers each time. Run each model twice or three times to see how much variance you're getting.
+
+### Step-by-step: a fair comparison in freeprompttester.app
+
+1. **Pick a representative prompt.** One that mirrors what your production traffic will look like. A toy prompt is useless for benchmarking.
+2. **Set the same parameters across providers.** freeprompttester.app applies your temperature, max-tokens and top-p settings to every selected model so the variables are controlled. Some providers (e.g. Mistral) clamp temperature ranges; that's automatic.
+3. **Pick at least three models.** Two-way comparisons are noisy. Three or four reveal the real spread.
+4. **Hit Run, watch them stream in parallel.** Note the TTFT differences while you wait — these aren't measurable from raw output alone.
+5. **Re-run two or three times.** Hit the regenerate button on each card to see variance with the same prompt and parameters.
+6. **Score them.** A blind paste-into-Notion-and-rank works fine for casual eval. For rigorous eval, the upcoming Pro tier supports rubric scoring and history.
+
+### What freeprompttester.app does for you under the hood
+
+freeprompttester.app fans out parallel `fetch()` calls to each provider's chat completion endpoint as soon as you click Run. Each provider streams its response back; the page parses each provider's SSE format (Anthropic, Google, OpenAI/OpenRouter, Cohere all differ slightly), extracts content tokens and usage metadata, and updates each card live. Cost is computed from the usage metadata × the provider's published per-million rates as soon as it arrives. Stop buttons abort with `AbortController` so cancelled calls don't get billed.
+
+### Common pitfalls to avoid
+
+Don't compare a tuned prompt for one model against an untuned one for another — that measures your prompt-engineering effort, not the models. Don't compare across temperatures: temperature 0.2 vs 0.9 will dwarf any model-quality difference. Don't draw conclusions from one run; LLMs are stochastic. And don't over-rely on benchmarks that aren't your task — coding benchmarks predict coding ability, but not how a model handles your customer support tone.
+
+---
+
+## /llm-prompt-playground
+
+### Free LLM Prompt Playground — One Prompt, Any Model, In Your Browser
+
+freeprompttester.app is a free, browser-based LLM prompt playground that supports more providers than any single-vendor playground. Bring your own API keys, write a prompt, pick from 25+ models across Anthropic, Google, xAI, Mistral, DeepSeek, Groq, Cohere and OpenRouter (for OpenAI's GPT family), and run them in parallel with streamed output, latency, token usage and per-call cost displayed live. The whole thing is a static HTML page — no proxy, no sign-up, no Freesuite servers in the request path.
+
+### What is an LLM prompt playground?
+
+An LLM playground is an interactive UI for testing prompts against language models without writing any code. You type a prompt, click run, and read the response. Most playgrounds (OpenAI's, Anthropic's Workbench, Google AI Studio, xAI's console) are tied to one vendor — useful for that vendor's models, useless for cross-provider comparison. freeprompttester.app is provider-agnostic.
+
+### Use cases
+
+- **Picking a model for a new project.** Run your representative prompts against your shortlist, compare quality and cost, decide.
+- **Prompt engineering.** Iterate on a prompt across multiple models so you don't accidentally optimize for one provider's quirks.
+- **Cost benchmarking.** Multiply per-call cost by your expected volume to see real monthly spend before committing.
+- **Vendor swap evaluation.** Already on OpenAI? Run your top prompts against Claude or Gemini to see if a switch is worth it.
+- **Quick sanity check.** When a model behaves oddly in production, paste the prompt into freeprompttester.app and try a few alternatives.
+
+### How freeprompttester.app works
+
+You paste API keys into the keys panel — one per provider, stored in your browser's localStorage. You write a system prompt (optional) and a user prompt. You select up to six models. You click Run. freeprompttester.app fires parallel `fetch()` calls directly from your browser to each provider's chat completion endpoint, parses the streamed SSE response, and renders tokens into per-model cards as they arrive. When the response finishes, the provider returns input and output token counts; freeprompttester.app multiplies those by the published per-million rates and shows the exact cost of each call.
+
+### Privacy
+
+freeprompttester.app is a static HTML/CSS/JS bundle. The only network requests it makes are to AI providers, using keys you paste. There is no Freesuite backend, no logging, no third-party analytics on input. Verify by inspecting the Network tab while running a prompt.
