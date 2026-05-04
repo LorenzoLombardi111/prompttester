@@ -499,6 +499,24 @@
             overflow: hidden;
         }
         .result-card.pinned { border-color: var(--accent); }
+        .result-card.synthesis {
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 0 4px rgba(196,154,42,0.10), var(--shadow);
+            grid-column: 1 / -1;
+        }
+        .result-card.synthesis .result-header { background: var(--surface); }
+        .result-card.synthesis .synth-badge {
+            background: var(--accent);
+            color: var(--accent-text);
+            font-family: var(--font-ui);
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-right: 6px;
+        }
         .result-header {
             padding: 12px 16px;
             border-bottom: 1px solid var(--border);
@@ -998,6 +1016,7 @@
             <button class="btn btn-secondary" id="exampleBtn">Example</button>
             <button class="btn btn-secondary" id="clearBtn">Clear</button>
             <button class="btn btn-secondary" id="stopBtn" disabled>Stop all</button>
+            <button class="btn btn-secondary" id="synthBtn" disabled title="Need at least 2 completed responses">✦ Synthesize</button>
             <button class="btn btn-primary btn-lg" id="runBtn">Run</button>
         </div>
     </div>
@@ -1042,6 +1061,33 @@
         <div class="modal-footer">
             <button class="btn btn-destructive" id="clearKeysBtn">Clear all keys</button>
             <button class="btn btn-primary" id="saveKeysBtn">Save & close</button>
+        </div>
+    </div>
+</div>
+
+<!-- Synthesize modal -->
+<div class="modal-backdrop" id="synthModal">
+    <div class="modal" role="dialog" aria-labelledby="synthTitle">
+        <div class="modal-header">
+            <div class="modal-title" id="synthTitle">✦ Synthesize results</div>
+            <button class="modal-close" id="synthClose" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-family: var(--font-ui); font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                Pick a model to read all completed responses and produce a single combined answer with consensus + disagreement notes.
+            </p>
+            <label style="font-family: var(--font-ui); font-size: 12px; font-weight: 500; color: var(--text-secondary); display: block; margin-bottom: 6px;">Synthesizer model</label>
+            <select id="synthModelSelect" class="input"></select>
+            <div style="font-family: var(--font-ui); font-size: 11px; color: var(--text-muted); margin-top: 6px;" id="synthHint"></div>
+
+            <details style="margin-top: 16px;">
+                <summary style="font-family: var(--font-ui); font-size: 13px; color: var(--text-secondary); cursor: pointer;">Edit synthesis instruction (optional)</summary>
+                <textarea class="textarea" id="synthInstruction" style="margin-top: 8px; min-height: 100px; font-family: var(--font-ui); font-size: 12px;"></textarea>
+            </details>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="synthCancel">Cancel</button>
+            <button class="btn btn-primary" id="synthGo">✦ Synthesize</button>
         </div>
     </div>
 </div>
@@ -2158,6 +2204,7 @@ async function runOne(model) {
     } finally {
         State.runs.delete(model.id);
         updateRunBar();
+        updateSynthButton();
     }
 }
 
@@ -2240,6 +2287,210 @@ function clearAllOutputs() {
     document.getElementById('resultsGrid').innerHTML = '';
     document.getElementById('costMeter').textContent = '$0.0000';
     emptyStateVisible(true);
+    updateSynthButton();
+}
+
+/* ============================================================
+   Synthesize across cards
+   ============================================================ */
+
+const DEFAULT_SYNTH_INSTRUCTION = `You are synthesizing responses from multiple AI models that all answered the SAME prompt independently. Your job:
+
+1. Produce one best-of synthesized answer that combines the strongest parts of each
+2. Briefly note where the models AGREED (consensus = high confidence)
+3. Briefly note where they DISAGREED, and flag any answer you think is clearly wrong
+4. Be concise. Do not quote full responses verbatim — extract and combine.
+
+Use this output structure:
+
+## Synthesized answer
+[the combined best-of answer]
+
+## Consensus
+- [point all/most agreed on]
+
+## Disagreements
+- [where they differed, and which side seems more correct]`;
+
+function getCardOutputs() {
+    const cards = document.querySelectorAll('.result-card:not(.synthesis)');
+    const outputs = [];
+    for (const card of cards) {
+        const modelId = card.dataset.model;
+        if (!modelId) continue;
+        const body = card.querySelector('.result-body');
+        if (!body || body.classList.contains('empty')) continue;
+        const text = body.textContent.trim();
+        if (!text) continue;
+        const model = findModel(modelId);
+        outputs.push({ id: modelId, label: model ? model.label : modelId, text });
+    }
+    return outputs;
+}
+
+function updateSynthButton() {
+    const btn = document.getElementById('synthBtn');
+    const outputs = getCardOutputs();
+    const enabled = outputs.length >= 2;
+    btn.disabled = !enabled;
+    btn.title = enabled ? `Synthesize ${outputs.length} responses` : 'Need at least 2 completed responses';
+}
+
+function openSynthModal() {
+    const outputs = getCardOutputs();
+    if (outputs.length < 2) {
+        showToast('Need at least 2 completed responses.');
+        return;
+    }
+    const sel = document.getElementById('synthModelSelect');
+    const eligibleProviders = new Set(Object.keys(State.keys));
+    // Build options: prefer currently-selected models; fallback to all known models with keys
+    const candidates = [];
+    const seen = new Set();
+    for (const id of State.selected) {
+        const m = findModel(id);
+        if (m && eligibleProviders.has(m.provider) && !seen.has(m.id)) {
+            candidates.push(m); seen.add(m.id);
+        }
+    }
+    // Also add a few sensible reasoning models if user has the keys
+    const fallbacks = ['anthropic:claude-opus-4-5', 'anthropic:claude-sonnet-4-5', 'openrouter:openai/gpt-5', 'google:gemini-2.5-pro'];
+    for (const id of fallbacks) {
+        const m = findModel(id);
+        if (m && eligibleProviders.has(m.provider) && !seen.has(m.id)) {
+            candidates.push(m); seen.add(m.id);
+        }
+    }
+    if (candidates.length === 0) {
+        showToast('Add at least one API key first.');
+        return;
+    }
+    sel.innerHTML = candidates.map((m, i) =>
+        `<option value="${m.id}"${i === 0 ? ' selected' : ''}>${m.label} (${m.provider})</option>`
+    ).join('');
+    document.getElementById('synthHint').textContent = `Will combine ${outputs.length} responses into one answer.`;
+    const ti = document.getElementById('synthInstruction');
+    if (!ti.value.trim()) ti.value = DEFAULT_SYNTH_INSTRUCTION;
+    document.getElementById('synthModal').classList.add('open');
+}
+
+function closeSynthModal() {
+    document.getElementById('synthModal').classList.remove('open');
+}
+
+async function runSynth() {
+    const sel = document.getElementById('synthModelSelect');
+    const synthModelId = sel.value;
+    const model = findModel(synthModelId);
+    if (!model) { showToast('Pick a synthesizer model.'); return; }
+    const outputs = getCardOutputs();
+    if (outputs.length < 2) { showToast('Need at least 2 completed responses.'); return; }
+
+    closeSynthModal();
+
+    const { system, user } = getPrompts();
+    const instruction = (document.getElementById('synthInstruction').value || DEFAULT_SYNTH_INSTRUCTION).trim();
+
+    const synthSystem = instruction;
+    const responseBlocks = outputs.map(o => `▼ ${o.label}\n${o.text}`).join('\n\n────────────────\n\n');
+    const synthUser =
+        `ORIGINAL PROMPT (system + user):\n` +
+        (system ? `[SYSTEM]\n${system}\n\n` : '') +
+        `[USER]\n${user}\n\n` +
+        `════════════════\nMODEL RESPONSES:\n\n${responseBlocks}\n\n` +
+        `════════════════\nNow produce the synthesis.`;
+
+    const grid = document.getElementById('resultsGrid');
+    const cardId = 'synthesis:' + Date.now();
+    let card = document.createElement('div');
+    card.className = 'result-card synthesis';
+    card.dataset.model = cardId;
+    card.innerHTML = `
+        <div class="result-header">
+            <div>
+                <span class="synth-badge">✦ Synthesis</span>
+                <span class="result-title">${model.label}</span>
+                <span class="result-provider">${model.provider} · combining ${outputs.length}</span>
+            </div>
+            <div class="result-actions">
+                <span class="status-pill streaming"><span class="dot"></span><span class="status-label">Streaming</span></span>
+                <button class="icon-action" data-act="copy" title="Copy">⧉</button>
+                <button class="icon-action" data-act="stop" title="Stop">■</button>
+            </div>
+        </div>
+        <div class="result-body"></div>
+        <div class="result-footer">
+            <span><strong class="ttft">—</strong> TTFT</span>
+            <span><strong class="latency">—</strong> total</span>
+            <span><strong class="tokens">—</strong> tokens</span>
+            <span><strong class="cost">$0.0000</strong></span>
+        </div>
+    `;
+    grid.insertBefore(card, grid.firstChild);
+
+    const body = card.querySelector('.result-body');
+    const ttft = card.querySelector('.ttft');
+    const latency = card.querySelector('.latency');
+    const tokensEl = card.querySelector('.tokens');
+    const costEl = card.querySelector('.cost');
+
+    const params = getParams();
+    // For reasoning models that require temp=1, clamp here
+    const isReasoning = /gpt-5|o4-mini|o3|gpt-5-mini|gpt-5-nano/.test(model.apiId || '');
+    const synthParams = {
+        ...params,
+        temp: isReasoning ? 1 : params.temp,
+        maxTokens: Math.max(params.maxTokens, 1500),
+    };
+
+    const controller = new AbortController();
+    State.runs.set(cardId, { controller, startTime: performance.now(), card });
+    card.querySelector('[data-act="stop"]').addEventListener('click', () => controller.abort());
+    card.querySelector('[data-act="copy"]').addEventListener('click', () => {
+        navigator.clipboard.writeText(body.textContent).then(() => showToast('Copied synthesis')).catch(() => {});
+    });
+
+    const startTime = performance.now();
+    let firstTokenTime = null;
+    let outputText = '';
+    let usage = null;
+
+    const onToken = (chunk) => {
+        if (firstTokenTime === null) {
+            firstTokenTime = performance.now();
+            ttft.textContent = ((firstTokenTime - startTime) / 1000).toFixed(2) + 's';
+        }
+        outputText += chunk;
+        body.textContent = outputText;
+        body.scrollTop = body.scrollHeight;
+    };
+    const onUsage = (u) => {
+        usage = u;
+        tokensEl.textContent = `${u.in}/${u.out}`;
+        const cost = (u.in * model.priceIn + u.out * model.priceOut) / 1000000;
+        costEl.textContent = formatCost(cost);
+    };
+
+    try {
+        await PROVIDERS[model.provider].run({
+            model, system: synthSystem, user: synthUser,
+            params: synthParams, signal: controller.signal, onToken, onUsage,
+        });
+        const total = ((performance.now() - startTime) / 1000).toFixed(2);
+        latency.textContent = total + 's';
+        setCardStatus(card, 'done', 'Done');
+    } catch (e) {
+        const aborted = e.name === 'AbortError' || controller.signal.aborted;
+        setCardStatus(card, 'error', aborted ? 'Stopped' : 'Error');
+        const errEl = document.createElement('div');
+        errEl.className = 'result-error';
+        errEl.textContent = aborted ? 'Stopped by user.' : (e.message || 'Synthesis failed');
+        card.insertBefore(errEl, card.querySelector('.result-footer'));
+        latency.textContent = ((performance.now() - startTime) / 1000).toFixed(2) + 's';
+    } finally {
+        State.runs.delete(cardId);
+        updateRunBar();
+    }
 }
 
 /* ============================================================
@@ -2294,6 +2545,13 @@ function clearAllOutputs() {
     document.getElementById('stopBtn').addEventListener('click', stopAll);
     document.getElementById('clearBtn').addEventListener('click', clearAllOutputs);
     document.getElementById('exampleBtn').addEventListener('click', loadExample);
+    document.getElementById('synthBtn').addEventListener('click', openSynthModal);
+    document.getElementById('synthClose').addEventListener('click', closeSynthModal);
+    document.getElementById('synthCancel').addEventListener('click', closeSynthModal);
+    document.getElementById('synthGo').addEventListener('click', runSynth);
+    document.getElementById('synthModal').addEventListener('click', (e) => {
+        if (e.target.id === 'synthModal') closeSynthModal();
+    });
 
     document.addEventListener('keydown', (e) => {
         const mod = e.metaKey || e.ctrlKey;
