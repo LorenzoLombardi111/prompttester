@@ -7,7 +7,8 @@
     <meta name="description" content="Run the same prompt against Claude Opus 4.7 and GPT-5 side by side in your browser. See output, latency, tokens and cost — free.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://freeprompttester.app/compare-claude-vs-gpt">
-    <meta name="theme-color" content="#faf9f6">
+    <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#141412" media="(prefers-color-scheme: dark)">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="manifest" href="/manifest.json">
 
@@ -150,6 +151,12 @@
 
         <h2>Tips for fair comparisons</h2>
         <p>Use the same temperature and max-tokens for both. Run the same prompt twice on each model to see variance. For long-context tests, paste a large document into the system prompt and ask a needle-in-haystack question — Claude Opus's 1M context window can hold things GPT-5 can't.</p>
+
+        <h2>Comparing Claude vs GPT in chat mode (multi-turn)</h2>
+        <p>Single-shot comparison reveals how Claude and GPT each answer one question. <strong>Chat mode</strong> reveals how they hold up across a 10-turn conversation — does Claude stay in character better, does GPT recover faster from "I changed my mind", which one tracks complex multi-step instructions cleanly. Open the Chat tab in freeprompttester.app, set one shared system prompt, pick Claude Opus 4.7 and GPT-5 (via OpenRouter), and start the conversation. Each model maintains its own history so the threads can diverge — you'll see exactly where they start to differ. Cumulative cost is shown per column (chat costs grow quadratically because each turn re-sends the full history).</p>
+
+        <h2>Synthesizing Claude and GPT into one answer</h2>
+        <p>After a single-shot run with both Claude and GPT, click <strong>✦ Synthesize</strong> in the run bar to send both responses to a chosen synthesizer model. The synthesizer produces a combined best-of answer plus a consensus section (where Claude and GPT agreed) and a disagreements section (where they diverged, and which side seems more correct). For high-stakes prompts where you want both perspectives but a single decision-ready output, this collapses the comparison into one final answer.</p>
 
         <div class="cta-box">
             <h3>Try freeprompttester.app — Free, No Sign-Up</h3>

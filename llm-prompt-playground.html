@@ -7,7 +7,8 @@
     <meta name="description" content="A free, browser-based LLM prompt playground. Paste a key, write a prompt, pick any model from any provider, watch it stream. No sign-up.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://freeprompttester.app/llm-prompt-playground">
-    <meta name="theme-color" content="#faf9f6">
+    <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#141412" media="(prefers-color-scheme: dark)">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="manifest" href="/manifest.json">
 
@@ -132,8 +133,14 @@
         <h2>How freeprompttester.app works</h2>
         <p>You paste API keys into the keys panel — one per provider, stored in your browser's localStorage. You write a system prompt (optional) and a user prompt. You select up to six models. You click Run. freeprompttester.app fires parallel <code>fetch()</code> calls directly from your browser to each provider's chat completion endpoint, parses the streamed SSE response, and renders tokens into per-model cards as they arrive. When the response finishes, the provider returns input and output token counts; freeprompttester.app multiplies those by the published per-million rates and shows the exact cost of each call.</p>
 
+        <h2>Two modes: single-shot and chat</h2>
+        <p>freeprompttester.app supports two playgrounds in one page. <strong>Single-shot mode</strong> is the default — one prompt, up to 6 models, parallel responses. <strong>Chat mode</strong> (top-tab toggle) holds a parallel multi-turn conversation with up to 3 models simultaneously, each with its own history. Same shared input bar, broadcasts every message to every column, watch each model's thread evolve independently. Useful for testing system prompts, persona stickiness, and how models handle multi-turn instruction following. State is kept separate between modes so your single-shot prompt and your chat history never bleed into each other.</p>
+
+        <h2>✦ Synthesize multi-model responses</h2>
+        <p>After a single-shot run completes with at least two models, the <strong>✦ Synthesize</strong> button in the run bar lights up. Click it to send all completed responses to a chosen model that produces a combined answer with explicit consensus and disagreement sections. The synthesis card renders full-width at the top of the results grid with a gold border. Default synthesis instruction is editable. This is the part of an LLM playground that no other tool ships — it turns "I have N opinions" into "I have one decision-ready answer with uncertainty marked."</p>
+
         <h2>Models in the picker</h2>
-        <p>Anthropic Claude Opus 4.7, Sonnet 4.6, Haiku 4.5. Google Gemini 2.5 Pro, 2.5 Flash, 2.0 Flash. xAI Grok 4, Grok 4 Fast, Grok 3. Mistral Large 2, Medium 3, Small 3.1. DeepSeek V3.1, R1. Groq-hosted Llama 4 Scout 17B, Llama 3.3 70B, Llama 3.1 8B. Cohere Command A, Command R+, Command R. Via OpenRouter: GPT-5, GPT-5 mini, GPT-4.1, o4-mini, plus 200+ other OpenRouter-listed models.</p>
+        <p>Anthropic Claude Opus 4.7, Sonnet 4.6, Haiku 4.5. Google Gemini 2.5 Pro, 2.5 Flash, 2.0 Flash. xAI Grok 4, Grok 4 Fast, Grok 3. Mistral Large 2, Medium 3, Small 3.1. DeepSeek V3.1, R1. Groq-hosted Llama 4 Scout 17B, Llama 3.3 70B, Llama 3.1 8B. Cohere Command A, Command R+, Command R. Via OpenRouter, the entire live catalog of 370+ models is loaded automatically — GPT-5, GPT-5 mini, GPT-4.1, o4-mini, plus every Anthropic, Google, Meta, Qwen, Mistral, DeepSeek, xAI, Cohere, Perplexity, NVIDIA, MiniMax model OpenRouter exposes. The OpenRouter tab includes a provider sub-filter dropdown and a search box to find any specific model by name or id.</p>
 
         <h2>Privacy</h2>
         <p>freeprompttester.app is a static HTML/CSS/JS bundle. The only network requests it makes are to AI providers, using keys you paste. There is no Freesuite backend, no logging, no third-party analytics on input. Verify by inspecting the Network tab while running a prompt.</p>

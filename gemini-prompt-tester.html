@@ -7,7 +7,8 @@
     <meta name="description" content="Test Gemini 2.5 Pro and 2.5 Flash prompts in your browser with your own Google AI key. Compare against Claude, GPT and Grok side by side. Free.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://freeprompttester.app/gemini-prompt-tester">
-    <meta name="theme-color" content="#faf9f6">
+    <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#141412" media="(prefers-color-scheme: dark)">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="manifest" href="/manifest.json">
 
@@ -140,6 +141,12 @@
 
         <h2>What "direct browser call" means for Gemini</h2>
         <p>The Gemini API supports <code>?key=</code> query-string authentication and CORS, so freeprompttester.app calls <code>generativelanguage.googleapis.com</code> directly from your browser. No proxy server. You can verify by watching the Network tab while running a prompt — the only outbound request goes to Google's domain.</p>
+
+        <h2>Multi-turn chat with Gemini</h2>
+        <p>freeprompttester.app's <strong>Chat mode</strong> works seamlessly with Gemini 2.5 Pro and 2.5 Flash. The provider role mapping is handled automatically — Gemini uses <code>user</code> and <code>model</code> roles internally instead of <code>user</code>/<code>assistant</code>, and freeprompttester.app translates between them so multi-turn history serializes correctly. Open the Chat tab, pick Gemini 2.5 Flash (cheapest fast option), and have a parallel conversation alongside Claude or GPT to see how Gemini holds up across long context. Cumulative cost stays low because Gemini Flash is among the cheapest tier-1 chat models at $0.30 per 1M input tokens.</p>
+
+        <h2>Synthesizing Gemini against other models</h2>
+        <p>After running the same prompt against Gemini and a few competitors in single-shot mode, click <strong>✦ Synthesize</strong> and pick Gemini 2.5 Pro (its 1M-token context handles the multi-response prompt comfortably) as the synthesizer. The combined answer + consensus + disagreement notes is a clean way to extract value from a multi-model run.</p>
 
         <div class="cta-box">
             <h3>Try freeprompttester.app — Free, No Sign-Up</h3>

@@ -7,7 +7,8 @@
     <meta name="description" content="A practical guide to comparing LLM outputs across providers. Latency, tokens, cost and quality — what to measure and how, in your browser.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://freeprompttester.app/how-to-compare-llm-outputs">
-    <meta name="theme-color" content="#faf9f6">
+    <meta name="theme-color" content="#faf9f6" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#141412" media="(prefers-color-scheme: dark)">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     <link rel="manifest" href="/manifest.json">
 
@@ -139,6 +140,12 @@
 
         <h2>What freeprompttester.app does for you under the hood</h2>
         <p>freeprompttester.app fans out parallel <code>fetch()</code> calls to each provider's chat completion endpoint as soon as you click Run. Each provider streams its response back; the page parses each provider's SSE format (Anthropic, Google, OpenAI/OpenRouter, Cohere all differ slightly), extracts content tokens and usage metadata, and updates each card live. Cost is computed from the usage metadata × the provider's published per-million rates as soon as it arrives. Stop buttons abort with <code>AbortController</code> so cancelled calls don't get billed.</p>
+
+        <h2>Comparing LLMs in chat mode (multi-turn)</h2>
+        <p>Single-shot comparison only captures one slice of model behavior — how each one answers the first question. <strong>Chat mode</strong> reveals dimensions you cannot see otherwise: instruction adherence over 10+ turns, character drift, recovery from "actually, scratch that" prompts, ability to reference earlier turns coherently. freeprompttester.app's chat mode runs up to three models in parallel against the same conversation. Each maintains its own history, so divergence becomes visible turn-by-turn. The cumulative cost meter per column also shows the quadratic cost growth of long chats (each turn re-sends the entire prior history), which is itself a useful signal when picking a model for a chat product.</p>
+
+        <h2>Synthesizing comparisons into a single answer</h2>
+        <p>When you've run a prompt across several models and want to extract a final answer rather than read four responses, click <strong>✦ Synthesize</strong> in the run bar (enabled once at least two cards have completed). Pick a strong reasoning model — Claude Opus 4.7, GPT-5, or Gemini 2.5 Pro — as the synthesizer. The output has three sections: a synthesized best-of answer, points where the models agreed (high-confidence consensus), and points where they disagreed (with which side seems more correct). For evaluation work, this turns "I have N opinions" into "I have one decision-ready output" with the uncertainty made explicit.</p>
 
         <h2>Common pitfalls to avoid</h2>
         <p>Don't compare a tuned prompt for one model against an untuned one for another — that measures your prompt-engineering effort, not the models. Don't compare across temperatures: temperature 0.2 vs 0.9 will dwarf any model-quality difference. Don't draw conclusions from one run; LLMs are stochastic. And don't over-rely on benchmarks that aren't your task — coding benchmarks predict coding ability, but not how a model handles your customer support tone.</p>
