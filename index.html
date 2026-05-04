@@ -917,6 +917,326 @@
         }
         .more-tools-links a:hover { background: var(--surface); }
 
+        /* ===== Mode tabs ===== */
+        .mode-tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 4px;
+            background: var(--bg);
+        }
+        .mode-tab {
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 500;
+            background: transparent;
+            border: none;
+            padding: 10px 18px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            border-bottom: 2px solid transparent;
+            margin-bottom: -1px;
+            transition: all 0.15s ease;
+        }
+        .mode-tab:hover { color: var(--text-primary); }
+        .mode-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+        .mode-tab .mode-tab-badge {
+            background: var(--surface);
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 500;
+            padding: 1px 6px;
+            border-radius: 10px;
+            margin-left: 6px;
+        }
+
+        /* ===== Chat mode ===== */
+        #chatMode {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            min-height: calc(100vh - 200px);
+        }
+        #chatMode.active { display: flex; }
+        .chat-header {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .chat-header-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            flex: 1;
+            min-width: 0;
+        }
+        .chat-system-btn {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            padding: 6px 10px;
+            cursor: pointer;
+            max-width: 320px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+        .chat-system-btn:hover { background: var(--border); color: var(--text-primary); }
+        .chat-system-btn .chat-system-label {
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+        }
+        .chat-models-strip {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .chat-model-pill {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            background: var(--accent);
+            color: var(--accent-text);
+            border-radius: 6px;
+            padding: 4px 6px 4px 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .chat-model-pill button {
+            background: rgba(255,255,255,0.2);
+            color: var(--accent-text);
+            border: none;
+            border-radius: 4px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        .chat-model-pill button:hover { background: rgba(255,255,255,0.4); }
+        .chat-add-model {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            background: transparent;
+            border: 1px dashed var(--border);
+            color: var(--text-secondary);
+            border-radius: 6px;
+            padding: 4px 10px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .chat-add-model:hover { background: var(--surface); color: var(--text-primary); }
+        .chat-add-model:disabled { opacity: 0.4; cursor: not-allowed; }
+        .chat-header-right {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .chat-cost-meter strong { color: var(--text-primary); font-weight: 600; }
+
+        .chat-columns {
+            display: grid;
+            grid-template-columns: repeat(var(--chat-cols, 1), 1fr);
+            gap: 12px;
+            flex: 1;
+            min-height: 360px;
+        }
+        .chat-column {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            min-height: 360px;
+            overflow: hidden;
+        }
+        .chat-column-header {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            background: var(--bg);
+            flex-shrink: 0;
+        }
+        .chat-column-title {
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .chat-column-meta {
+            font-family: var(--font-ui);
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-left: 6px;
+        }
+        .chat-column-body {
+            flex: 1;
+            padding: 12px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 60vh;
+        }
+        .chat-column-empty {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+            padding: 24px 12px;
+        }
+        .chat-column-footer {
+            padding: 6px 14px;
+            border-top: 1px solid var(--border);
+            font-family: var(--font-ui);
+            font-size: 11px;
+            color: var(--text-muted);
+            background: var(--bg);
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .chat-column-footer strong { color: var(--text-secondary); font-weight: 500; }
+
+        .chat-bubble {
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-family: var(--font-ui);
+            font-size: 13px;
+            line-height: 1.55;
+            max-width: 92%;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .chat-bubble.user {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            align-self: flex-end;
+        }
+        .chat-bubble.assistant {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent);
+            align-self: flex-start;
+        }
+        .chat-bubble.assistant.streaming { border-left-color: var(--accent); }
+        .chat-bubble.assistant.error { border-left-color: var(--destructive); color: var(--destructive); }
+        .chat-bubble-meta {
+            font-family: var(--font-ui);
+            font-size: 10px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .chat-bubble-streaming-dot {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin-right: 6px;
+            animation: pulse 0.8s ease-in-out infinite;
+            vertical-align: middle;
+        }
+
+        .chat-input-bar {
+            position: sticky;
+            bottom: 0;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 12px;
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            box-shadow: var(--shadow);
+            z-index: 30;
+        }
+        .chat-input {
+            font-family: var(--font-ui);
+            font-size: 14px;
+            background: var(--bg);
+            border: 1px solid transparent;
+            border-radius: 8px;
+            padding: 8px 10px;
+            color: var(--text-primary);
+            flex: 1;
+            resize: none;
+            min-height: 40px;
+            max-height: 200px;
+            line-height: 1.5;
+        }
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(196,154,42,0.12);
+        }
+        .chat-input:disabled { opacity: 0.6; }
+        .chat-send-btn {
+            font-family: var(--font-ui);
+            font-size: 13px;
+            font-weight: 600;
+            background: var(--accent);
+            color: var(--accent-text);
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            white-space: nowrap;
+        }
+        .chat-send-btn:hover:not(:disabled) { background: var(--accent-hover); }
+        .chat-send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .chat-empty-state {
+            text-align: center;
+            padding: 64px 24px;
+            color: var(--text-muted);
+            font-family: var(--font-ui);
+            font-size: 14px;
+            border: 1px dashed var(--border);
+            border-radius: 10px;
+            background: var(--surface);
+        }
+        .chat-empty-state strong { color: var(--text-secondary); display: block; margin-bottom: 8px; font-size: 16px; }
+
         /* Mobile */
         @media (max-width: 768px) {
             .main { padding: 16px; gap: 16px; }
@@ -928,6 +1248,8 @@
             .param-group { min-width: 90px; flex: 1; }
             .modal-backdrop { padding: 0; }
             .modal { border-radius: 0; max-height: 100vh; height: 100vh; }
+            .chat-columns { grid-template-columns: 1fr !important; }
+            .chat-system-btn { max-width: none; flex: 1; }
         }
     </style>
 </head>
@@ -947,6 +1269,13 @@
 </header>
 
 <main class="main" id="app">
+
+    <div class="mode-tabs" role="tablist" aria-label="Mode">
+        <button class="mode-tab active" data-mode="single" role="tab" aria-selected="true">Single-shot</button>
+        <button class="mode-tab" data-mode="chat" role="tab" aria-selected="false">Chat<span class="mode-tab-badge">multi-turn</span></button>
+    </div>
+
+    <div id="singleMode">
 
     <section class="panel prompt-section">
         <div class="panel-title">
@@ -1034,7 +1363,90 @@
         <div class="upgrade-desc">Save prompt+model combinations as named evals, re-run with one click, score outputs and chart history. For prompt-engineering teams comparing changes over time.</div>
         <a href="https://freesuite.app" class="upgrade-link" target="_blank" rel="noopener">Unlock with freesuite.app · $2.88/mo</a>
     </div>
+
+    </div><!-- /#singleMode -->
+
+    <div id="chatMode">
+        <div class="chat-header">
+            <div class="chat-header-left">
+                <button class="chat-system-btn" id="chatSystemBtn">
+                    <span class="chat-system-label">System</span>
+                    <span id="chatSystemPreview">Click to set a system prompt…</span>
+                </button>
+                <div class="chat-models-strip" id="chatModelsStrip"></div>
+                <button class="chat-add-model" id="chatAddModelBtn">+ Add model</button>
+            </div>
+            <div class="chat-header-right">
+                <span class="chat-cost-meter">Total: <strong id="chatTotalCost">$0.0000</strong></span>
+                <button class="btn btn-secondary" id="chatClearBtn">Clear chat</button>
+            </div>
+        </div>
+
+        <div class="chat-columns" id="chatColumns" style="--chat-cols: 1;"></div>
+
+        <div class="chat-empty-state" id="chatEmptyState">
+            <strong>Pick 1–3 models, set a system prompt, and start chatting.</strong>
+            Each selected model maintains its own conversation history. Send a message and watch them respond in parallel with cost shown live.
+        </div>
+
+        <div class="chat-input-bar">
+            <textarea class="chat-input" id="chatInput" placeholder="Type a message and press Enter (Shift+Enter for newline)…" rows="1"></textarea>
+            <button class="chat-send-btn" id="chatSendBtn" disabled>Send</button>
+            <button class="btn btn-destructive" id="chatStopBtn" style="display:none;">Stop</button>
+        </div>
+    </div><!-- /#chatMode -->
 </main>
+
+<!-- Chat system prompt modal -->
+<div class="modal-backdrop" id="chatSystemModal">
+    <div class="modal" role="dialog" aria-labelledby="chatSystemTitle">
+        <div class="modal-header">
+            <div class="modal-title" id="chatSystemTitle">System prompt</div>
+            <button class="modal-close" id="chatSystemClose" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-family: var(--font-ui); font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+                The system prompt is sent at the start of every conversation turn. Define personality, role, format rules, etc.
+            </p>
+            <textarea class="textarea" id="chatSystemInput" style="min-height: 200px; font-family: var(--font-ui); font-size: 13px;" placeholder="You are a helpful assistant…"></textarea>
+            <div style="font-family: var(--font-ui); font-size: 11px; color: var(--text-muted); margin-top: 6px;">
+                Changing this mid-conversation only affects subsequent turns. Earlier turns already used the previous system prompt.
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="chatSystemCancel">Cancel</button>
+            <button class="btn btn-primary" id="chatSystemSave">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- Chat model picker modal -->
+<div class="modal-backdrop" id="chatPickerModal">
+    <div class="modal" role="dialog" aria-labelledby="chatPickerTitle">
+        <div class="modal-header">
+            <div class="modal-title" id="chatPickerTitle">Add model to chat</div>
+            <button class="modal-close" id="chatPickerClose" aria-label="Close">×</button>
+        </div>
+        <div class="modal-body">
+            <p style="font-family: var(--font-ui); font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">
+                Pick up to 3 models to chat with in parallel. Each maintains its own history.
+            </p>
+            <div class="model-section-tab" id="chatPickerTabs"></div>
+            <div class="model-search visible" id="chatPickerSearch">
+                <div class="model-filter-row">
+                    <select id="chatPickerProviderFilter" class="model-search-input model-provider-select" aria-label="Filter by provider">
+                        <option value="">All providers</option>
+                    </select>
+                    <input type="search" id="chatPickerSearchInput" class="model-search-input" placeholder="Search by name or id…" autocomplete="off">
+                </div>
+            </div>
+            <div class="model-grid no-scroll" id="chatPickerGrid" style="max-height: 50vh; overflow-y: auto;"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" id="chatPickerCancel">Done</button>
+        </div>
+    </div>
+</div>
 
 <footer class="status-bar">
     <span id="statusLeft">Ready</span>
@@ -1322,12 +1734,29 @@ let OPENROUTER_LIVE = [];
    STATE
    ============================================================ */
 const State = {
+    mode: localStorage.getItem('prompttester_mode') || 'single', // 'single' | 'chat'
     keys: JSON.parse(localStorage.getItem('prompttester_keys') || '{}'),
     selected: JSON.parse(localStorage.getItem('prompttester_models') || 'null') || ['anthropic:claude-opus-4-5', 'openrouter:openai/gpt-5', 'google:gemini-2.5-pro', 'xai:grok-4'],
     runs: new Map(), // model -> {controller, startTime, cardEl, output, ttft}
     activeTab: 'popular',
     search: '',
     orProvider: '',  // sub-filter for OpenRouter tab — empty = all providers
+    chat: (() => {
+        const raw = localStorage.getItem('prompttester_chat');
+        if (raw) {
+            try { return JSON.parse(raw); } catch {}
+        }
+        return {
+            systemPrompt: '',
+            selected: ['anthropic:claude-sonnet-4-5', 'google:gemini-2.5-flash', 'openrouter:openai/gpt-5-mini'],
+            history: {},  // modelId -> [{role, content, ts, latency, ttft, usage, cost, error?}]
+        };
+    })(),
+    chatStreaming: false,
+    chatRuns: new Map(), // modelId -> AbortController
+    chatPickerTab: 'popular',
+    chatPickerSearch: '',
+    chatPickerOrProvider: '',
 };
 
 // Pretty labels for known OpenRouter provider prefixes
@@ -1506,13 +1935,16 @@ async function streamOpenAICompatible({ url, headers, body, signal, onToken, onU
 
 const PROVIDERS = {
     anthropic: {
-        async run({ model, system, user, params, signal, onToken, onUsage }) {
+        async run({ model, system, user, messages, params, signal, onToken, onUsage }) {
             const key = State.keys.anthropic;
             if (!key) throw new Error('Missing Anthropic API key. Add it in the API keys panel.');
+            const msgs = (messages && messages.length)
+                ? messages.filter(m => m.role !== 'system').map(m => ({ role: m.role, content: m.content }))
+                : [{ role: 'user', content: user }];
             const body = {
                 model: model.apiId,
                 max_tokens: Math.min(params.maxTokens, 16000),
-                messages: [{ role: 'user', content: user }],
+                messages: msgs,
                 temperature: params.temp,
                 top_p: params.topP,
                 stream: params.stream,
@@ -1559,13 +1991,19 @@ const PROVIDERS = {
     },
 
     google: {
-        async run({ model, system, user, params, signal, onToken, onUsage }) {
+        async run({ model, system, user, messages, params, signal, onToken, onUsage }) {
             const key = State.keys.google;
             if (!key) throw new Error('Missing Google AI API key. Add it in the API keys panel.');
             const endpoint = params.stream ? 'streamGenerateContent' : 'generateContent';
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model.apiId}:${endpoint}?key=${encodeURIComponent(key)}${params.stream ? '&alt=sse' : ''}`;
+            const contents = (messages && messages.length)
+                ? messages.filter(m => m.role !== 'system').map(m => ({
+                    role: m.role === 'assistant' ? 'model' : 'user',
+                    parts: [{ text: m.content }],
+                }))
+                : [{ role: 'user', parts: [{ text: user }] }];
             const body = {
-                contents: [{ role: 'user', parts: [{ text: user }] }],
+                contents,
                 generationConfig: {
                     temperature: params.temp,
                     maxOutputTokens: params.maxTokens,
@@ -1613,14 +2051,14 @@ const PROVIDERS = {
     },
 
     xai: {
-        async run({ model, system, user, params, signal, onToken, onUsage }) {
+        async run({ model, system, user, messages, params, signal, onToken, onUsage }) {
             const key = State.keys.xai;
             if (!key) throw new Error('Missing xAI API key. Add it in the API keys panel.');
-            const messages = [];
-            if (system) messages.push({ role: 'system', content: system });
-            messages.push({ role: 'user', content: user });
+            const msgs = (messages && messages.length)
+                ? [...(system ? [{ role: 'system', content: system }] : []), ...messages.filter(m => m.role !== 'system')]
+                : [...(system ? [{ role: 'system', content: system }] : []), { role: 'user', content: user }];
             const body = {
-                model: model.apiId, messages,
+                model: model.apiId, messages: msgs,
                 temperature: params.temp, max_tokens: params.maxTokens, top_p: params.topP,
                 stream: params.stream,
             };
@@ -1634,14 +2072,14 @@ const PROVIDERS = {
     },
 
     mistral: {
-        async run({ model, system, user, params, signal, onToken, onUsage }) {
+        async run({ model, system, user, messages, params, signal, onToken, onUsage }) {
             const key = State.keys.mistral;
             if (!key) throw new Error('Missing Mistral API key. Add it in the API keys panel.');
-            const messages = [];
-            if (system) messages.push({ role: 'system', content: system });
-            messages.push({ role: 'user', content: user });
+            const msgs = (messages && messages.length)
+                ? [...(system ? [{ role: 'system', content: system }] : []), ...messages.filter(m => m.role !== 'system')]
+                : [...(system ? [{ role: 'system', content: system }] : []), { role: 'user', content: user }];
             const body = {
-                model: model.apiId, messages,
+                model: model.apiId, messages: msgs,
                 temperature: Math.min(params.temp, 1), max_tokens: params.maxTokens, top_p: params.topP,
                 stream: params.stream,
             };
@@ -1654,14 +2092,14 @@ const PROVIDERS = {
     },
 
     deepseek: {
-        async run({ model, system, user, params, signal, onToken, onUsage }) {
+        async run({ model, system, user, messages, params, signal, onToken, onUsage }) {
             const key = State.keys.deepseek;
             if (!key) throw new Error('Missing DeepSeek API key. Add it in the API keys panel.');
-            const messages = [];
-            if (system) messages.push({ role: 'system', content: system });
-            messages.push({ role: 'user', content: user });
+            const msgs = (messages && messages.length)
+                ? [...(system ? [{ role: 'system', content: system }] : []), ...messages.filter(m => m.role !== 'system')]
+                : [...(system ? [{ role: 'system', content: system }] : []), { role: 'user', content: user }];
             const body = {
-                model: model.apiId, messages,
+                model: model.apiId, messages: msgs,
                 temperature: params.temp, max_tokens: params.maxTokens, top_p: params.topP,
                 stream: params.stream,
             };
@@ -1675,14 +2113,14 @@ const PROVIDERS = {
     },
 
     groq: {
-        async run({ model, system, user, params, signal, onToken, onUsage }) {
+        async run({ model, system, user, messages, params, signal, onToken, onUsage }) {
             const key = State.keys.groq;
             if (!key) throw new Error('Missing Groq API key. Add it in the API keys panel.');
-            const messages = [];
-            if (system) messages.push({ role: 'system', content: system });
-            messages.push({ role: 'user', content: user });
+            const msgs = (messages && messages.length)
+                ? [...(system ? [{ role: 'system', content: system }] : []), ...messages.filter(m => m.role !== 'system')]
+                : [...(system ? [{ role: 'system', content: system }] : []), { role: 'user', content: user }];
             const body = {
-                model: model.apiId, messages,
+                model: model.apiId, messages: msgs,
                 temperature: params.temp, max_tokens: params.maxTokens, top_p: params.topP,
                 stream: params.stream,
             };
@@ -1696,14 +2134,14 @@ const PROVIDERS = {
     },
 
     cohere: {
-        async run({ model, system, user, params, signal, onToken, onUsage }) {
+        async run({ model, system, user, messages, params, signal, onToken, onUsage }) {
             const key = State.keys.cohere;
             if (!key) throw new Error('Missing Cohere API key. Add it in the API keys panel.');
-            const messages = [];
-            if (system) messages.push({ role: 'system', content: system });
-            messages.push({ role: 'user', content: user });
+            const msgs = (messages && messages.length)
+                ? [...(system ? [{ role: 'system', content: system }] : []), ...messages.filter(m => m.role !== 'system')]
+                : [...(system ? [{ role: 'system', content: system }] : []), { role: 'user', content: user }];
             const body = {
-                model: model.apiId, messages,
+                model: model.apiId, messages: msgs,
                 temperature: params.temp, max_tokens: params.maxTokens, p: params.topP,
                 stream: params.stream,
             };
@@ -1748,14 +2186,14 @@ const PROVIDERS = {
     },
 
     openrouter: {
-        async run({ model, system, user, params, signal, onToken, onUsage }) {
+        async run({ model, system, user, messages, params, signal, onToken, onUsage }) {
             const key = State.keys.openrouter;
             if (!key) throw new Error('Missing OpenRouter API key. Add it in the API keys panel.');
-            const messages = [];
-            if (system) messages.push({ role: 'system', content: system });
-            messages.push({ role: 'user', content: user });
+            const msgs = (messages && messages.length)
+                ? [...(system ? [{ role: 'system', content: system }] : []), ...messages.filter(m => m.role !== 'system')]
+                : [...(system ? [{ role: 'system', content: system }] : []), { role: 'user', content: user }];
             const body = {
-                model: model.apiId, messages,
+                model: model.apiId, messages: msgs,
                 temperature: params.temp, max_tokens: params.maxTokens, top_p: params.topP,
                 stream: params.stream,
                 usage: { include: true },
@@ -2494,6 +2932,509 @@ async function runSynth() {
 }
 
 /* ============================================================
+   Chat mode
+   ============================================================ */
+const REASONING_RX = /\/(?:gpt-5|gpt-5\.5|o4-mini|o3|gpt-5-mini|gpt-5-nano|o1|o1-mini|o1-preview)$|^(deepseek-reasoner|o1|o3|o4-mini)/;
+function modelNeedsTemp1(model) {
+    if (!model || !model.apiId) return false;
+    return REASONING_RX.test(model.apiId);
+}
+
+function saveChatState() {
+    try {
+        const compact = {
+            systemPrompt: State.chat.systemPrompt,
+            selected: State.chat.selected,
+            history: State.chat.history,
+        };
+        const s = JSON.stringify(compact);
+        if (s.length > 800000) {
+            // Drop oldest turns until under cap
+            for (const id of Object.keys(compact.history)) {
+                while (compact.history[id] && compact.history[id].length > 6 && JSON.stringify(compact).length > 800000) {
+                    compact.history[id].splice(0, 2);
+                }
+            }
+        }
+        localStorage.setItem('prompttester_chat', JSON.stringify(compact));
+    } catch {}
+}
+
+function switchMode(mode) {
+    if (mode === State.mode) return;
+    if (State.chatStreaming) {
+        // Abort all chat streams before switching
+        for (const c of State.chatRuns.values()) try { c.abort(); } catch {}
+        State.chatStreaming = false;
+    }
+    State.mode = mode;
+    localStorage.setItem('prompttester_mode', mode);
+    document.querySelectorAll('.mode-tab').forEach(b => {
+        const isActive = b.dataset.mode === mode;
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+    document.getElementById('singleMode').style.display = mode === 'single' ? '' : 'none';
+    document.getElementById('chatMode').classList.toggle('active', mode === 'chat');
+    if (mode === 'chat') {
+        renderChatHeader();
+        renderChatColumns();
+        autoResizeChatInput();
+    }
+}
+
+function renderChatHeader() {
+    const preview = document.getElementById('chatSystemPreview');
+    const sys = (State.chat.systemPrompt || '').trim();
+    preview.textContent = sys ? (sys.length > 60 ? sys.slice(0, 60) + '…' : sys) : 'Click to set a system prompt…';
+    preview.style.fontStyle = sys ? 'normal' : 'italic';
+    preview.style.color = sys ? 'var(--text-primary)' : 'var(--text-muted)';
+
+    const strip = document.getElementById('chatModelsStrip');
+    strip.innerHTML = '';
+    for (const id of State.chat.selected) {
+        const m = findModel(id);
+        const pill = document.createElement('span');
+        pill.className = 'chat-model-pill';
+        pill.innerHTML = `<span>${m ? m.label : id}</span><button title="Remove">×</button>`;
+        pill.querySelector('button').addEventListener('click', () => {
+            removeChatModel(id);
+        });
+        strip.appendChild(pill);
+    }
+    document.getElementById('chatAddModelBtn').disabled = State.chat.selected.length >= 3;
+    updateChatTotalCost();
+}
+
+function updateChatTotalCost() {
+    let total = 0;
+    for (const id of State.chat.selected) {
+        const turns = State.chat.history[id] || [];
+        for (const t of turns) if (t.cost) total += t.cost;
+    }
+    document.getElementById('chatTotalCost').textContent = formatCost(total);
+}
+
+function addChatModel(id) {
+    if (State.chat.selected.includes(id)) return;
+    if (State.chat.selected.length >= 3) {
+        showToast('Max 3 chat models. Remove one first.');
+        return;
+    }
+    State.chat.selected.push(id);
+    if (!State.chat.history[id]) State.chat.history[id] = [];
+    saveChatState();
+    renderChatHeader();
+    renderChatColumns();
+    renderChatPickerGrid();
+}
+
+function removeChatModel(id) {
+    const idx = State.chat.selected.indexOf(id);
+    if (idx < 0) return;
+    State.chat.selected.splice(idx, 1);
+    saveChatState();
+    renderChatHeader();
+    renderChatColumns();
+    renderChatPickerGrid();
+}
+
+function renderChatColumns() {
+    const grid = document.getElementById('chatColumns');
+    const empty = document.getElementById('chatEmptyState');
+    const sel = State.chat.selected;
+    grid.innerHTML = '';
+    if (sel.length === 0) {
+        empty.style.display = '';
+        grid.style.display = 'none';
+        return;
+    }
+    empty.style.display = 'none';
+    grid.style.display = '';
+    grid.style.setProperty('--chat-cols', String(sel.length));
+    for (const id of sel) {
+        const m = findModel(id);
+        const turns = State.chat.history[id] || [];
+        const userTurns = turns.filter(t => t.role === 'user').length;
+        const cumCost = turns.reduce((s, t) => s + (t.cost || 0), 0);
+        const totalTokens = turns.reduce((s, t) => s + (t.usage?.in || 0) + (t.usage?.out || 0), 0);
+
+        const col = document.createElement('div');
+        col.className = 'chat-column';
+        col.dataset.model = id;
+        col.innerHTML = `
+            <div class="chat-column-header">
+                <div>
+                    <span class="chat-column-title">${m ? m.label : id}</span>
+                    <span class="chat-column-meta">${m ? m.provider : '?'} · turn ${userTurns}</span>
+                </div>
+            </div>
+            <div class="chat-column-body" data-body></div>
+            <div class="chat-column-footer">
+                <span><strong>${formatCost(cumCost)}</strong> cumulative</span>
+                <span><strong>${totalTokens}</strong> tokens</span>
+            </div>
+        `;
+        grid.appendChild(col);
+
+        const body = col.querySelector('[data-body]');
+        if (turns.length === 0) {
+            const e = document.createElement('div');
+            e.className = 'chat-column-empty';
+            e.textContent = 'No turns yet. Send a message below.';
+            body.appendChild(e);
+        } else {
+            for (const t of turns) appendChatBubble(body, t, m);
+        }
+        body.scrollTop = body.scrollHeight;
+    }
+}
+
+function appendChatBubble(body, turn, model) {
+    // Remove empty placeholder if present
+    const empty = body.querySelector('.chat-column-empty');
+    if (empty) empty.remove();
+
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble ' + (turn.role === 'user' ? 'user' : 'assistant');
+    if (turn.error) bubble.classList.add('error');
+    if (turn.streaming) bubble.classList.add('streaming');
+
+    const text = document.createElement('div');
+    text.className = 'chat-bubble-text';
+    text.textContent = turn.content || '';
+    bubble.appendChild(text);
+
+    if (turn.role === 'assistant') {
+        const meta = document.createElement('div');
+        meta.className = 'chat-bubble-meta';
+        const parts = [];
+        if (turn.streaming) parts.push('<span class="chat-bubble-streaming-dot"></span>streaming…');
+        if (turn.ttft != null) parts.push(`TTFT ${turn.ttft.toFixed(2)}s`);
+        if (turn.latency != null) parts.push(`${turn.latency.toFixed(2)}s`);
+        if (turn.usage) parts.push(`${turn.usage.in}/${turn.usage.out} tokens`);
+        if (turn.cost != null) parts.push(formatCost(turn.cost));
+        if (turn.error) parts.push(`error: ${turn.error}`);
+        meta.innerHTML = parts.join(' · ');
+        bubble.appendChild(meta);
+    }
+    body.appendChild(bubble);
+    return bubble;
+}
+
+function setChatStreaming(streaming) {
+    State.chatStreaming = streaming;
+    document.getElementById('chatInput').disabled = streaming;
+    document.getElementById('chatSendBtn').disabled = streaming || !document.getElementById('chatInput').value.trim() || State.chat.selected.length === 0;
+    document.getElementById('chatStopBtn').style.display = streaming ? '' : 'none';
+}
+
+function stopChatAll() {
+    for (const c of State.chatRuns.values()) {
+        try { c.abort(); } catch {}
+    }
+}
+
+async function streamChatTurn(modelId, params) {
+    const model = findModel(modelId);
+    if (!model) return;
+    const history = State.chat.history[modelId] || [];
+
+    const col = document.querySelector(`.chat-column[data-model="${CSS.escape(modelId)}"]`);
+    if (!col) return;
+    const body = col.querySelector('[data-body]');
+
+    // Append a placeholder streaming assistant turn to state and render bubble
+    const turn = {
+        role: 'assistant',
+        content: '',
+        ts: Date.now(),
+        streaming: true,
+        ttft: null,
+        latency: null,
+        usage: null,
+        cost: 0,
+    };
+    history.push(turn);
+    State.chat.history[modelId] = history;
+    const bubble = appendChatBubble(body, turn, model);
+    body.scrollTop = body.scrollHeight;
+    const textEl = bubble.querySelector('.chat-bubble-text');
+    const metaEl = bubble.querySelector('.chat-bubble-meta');
+
+    const startTime = performance.now();
+    let firstTokenTime = null;
+    const controller = new AbortController();
+    State.chatRuns.set(modelId, controller);
+
+    const isReasoning = modelNeedsTemp1(model);
+    const callParams = {
+        ...params,
+        temp: isReasoning ? 1 : params.temp,
+        maxTokens: Math.max(params.maxTokens, 1024),
+    };
+
+    // Build messages from history excluding the placeholder we just pushed
+    const sendMessages = history.slice(0, -1).map(t => ({ role: t.role, content: t.content }));
+
+    const onToken = (chunk) => {
+        if (firstTokenTime == null) {
+            firstTokenTime = performance.now();
+            turn.ttft = (firstTokenTime - startTime) / 1000;
+        }
+        turn.content += chunk;
+        textEl.textContent = turn.content;
+        const parts = ['<span class="chat-bubble-streaming-dot"></span>streaming…'];
+        if (turn.ttft != null) parts.push(`TTFT ${turn.ttft.toFixed(2)}s`);
+        metaEl.innerHTML = parts.join(' · ');
+        body.scrollTop = body.scrollHeight;
+    };
+    const onUsage = (u) => {
+        turn.usage = u;
+        turn.cost = (u.in * model.priceIn + u.out * model.priceOut) / 1000000;
+    };
+
+    try {
+        await PROVIDERS[model.provider].run({
+            model,
+            messages: sendMessages,
+            system: State.chat.systemPrompt || '',
+            params: callParams,
+            signal: controller.signal,
+            onToken, onUsage,
+        });
+        turn.latency = (performance.now() - startTime) / 1000;
+        turn.streaming = false;
+        if (!turn.usage && turn.content) {
+            const inEst = Math.round(sendMessages.reduce((s, m) => s + m.content.length, 0) / 4);
+            const outEst = Math.round(turn.content.length / 4);
+            turn.usage = { in: inEst, out: outEst };
+            turn.cost = (inEst * model.priceIn + outEst * model.priceOut) / 1000000;
+        }
+        bubble.classList.remove('streaming');
+    } catch (e) {
+        const aborted = e.name === 'AbortError' || controller.signal.aborted;
+        turn.streaming = false;
+        turn.latency = (performance.now() - startTime) / 1000;
+        turn.error = aborted ? 'stopped' : (e.message || 'failed').slice(0, 200);
+        bubble.classList.remove('streaming');
+        bubble.classList.add('error');
+        if (!turn.content) turn.content = `[${turn.error}]`;
+        textEl.textContent = turn.content;
+    } finally {
+        State.chatRuns.delete(modelId);
+        // Re-render bubble meta with final values
+        const parts = [];
+        if (turn.ttft != null) parts.push(`TTFT ${turn.ttft.toFixed(2)}s`);
+        if (turn.latency != null) parts.push(`${turn.latency.toFixed(2)}s`);
+        if (turn.usage) parts.push(`${turn.usage.in}/${turn.usage.out} tokens`);
+        if (turn.cost != null) parts.push(formatCost(turn.cost));
+        if (turn.error) parts.push(`error: ${turn.error}`);
+        metaEl.innerHTML = parts.join(' · ');
+        // Update column footer
+        const turns = State.chat.history[modelId];
+        const userTurns = turns.filter(t => t.role === 'user').length;
+        const cumCost = turns.reduce((s, t) => s + (t.cost || 0), 0);
+        const totalTokens = turns.reduce((s, t) => s + (t.usage?.in || 0) + (t.usage?.out || 0), 0);
+        col.querySelector('.chat-column-meta').textContent = `${model.provider} · turn ${userTurns}`;
+        const footerSpans = col.querySelectorAll('.chat-column-footer span');
+        if (footerSpans[0]) footerSpans[0].innerHTML = `<strong>${formatCost(cumCost)}</strong> cumulative`;
+        if (footerSpans[1]) footerSpans[1].innerHTML = `<strong>${totalTokens}</strong> tokens`;
+        updateChatTotalCost();
+        saveChatState();
+    }
+}
+
+async function sendChatMessage() {
+    const input = document.getElementById('chatInput');
+    const text = input.value.trim();
+    if (!text) return;
+    if (State.chat.selected.length === 0) {
+        showToast('Pick at least one chat model.');
+        return;
+    }
+    if (State.chatStreaming) return;
+
+    // Append user turn to all models
+    const userTurn = { role: 'user', content: text, ts: Date.now() };
+    for (const id of State.chat.selected) {
+        if (!State.chat.history[id]) State.chat.history[id] = [];
+        State.chat.history[id].push({ ...userTurn });
+        const col = document.querySelector(`.chat-column[data-model="${CSS.escape(id)}"]`);
+        if (col) {
+            const body = col.querySelector('[data-body]');
+            const m = findModel(id);
+            appendChatBubble(body, userTurn, m);
+            body.scrollTop = body.scrollHeight;
+        }
+    }
+    input.value = '';
+    autoResizeChatInput();
+    saveChatState();
+    setChatStreaming(true);
+
+    const params = getParams();
+    await Promise.allSettled(State.chat.selected.map(id => streamChatTurn(id, params)));
+
+    setChatStreaming(false);
+}
+
+function clearChat() {
+    if (!confirm('Clear all chat history?')) return;
+    stopChatAll();
+    State.chat.history = {};
+    saveChatState();
+    renderChatColumns();
+    renderChatHeader();
+}
+
+function autoResizeChatInput() {
+    const ta = document.getElementById('chatInput');
+    ta.style.height = 'auto';
+    ta.style.height = Math.min(ta.scrollHeight, 200) + 'px';
+}
+
+/* ============================================================
+   Chat: system prompt modal
+   ============================================================ */
+function openChatSystemModal() {
+    document.getElementById('chatSystemInput').value = State.chat.systemPrompt || '';
+    document.getElementById('chatSystemModal').classList.add('open');
+}
+function closeChatSystemModal() {
+    document.getElementById('chatSystemModal').classList.remove('open');
+}
+function saveChatSystemPrompt() {
+    State.chat.systemPrompt = document.getElementById('chatSystemInput').value;
+    saveChatState();
+    renderChatHeader();
+    closeChatSystemModal();
+}
+
+/* ============================================================
+   Chat: model picker modal
+   ============================================================ */
+function openChatPickerModal() {
+    if (State.chat.selected.length >= 3) {
+        showToast('Max 3 models. Remove one first.');
+        return;
+    }
+    State.chatPickerSearch = '';
+    document.getElementById('chatPickerSearchInput').value = '';
+    State.chatPickerOrProvider = '';
+    renderChatPickerTabs();
+    renderChatPickerGrid();
+    populateChatPickerOrProvider();
+    document.getElementById('chatPickerModal').classList.add('open');
+}
+function closeChatPickerModal() {
+    document.getElementById('chatPickerModal').classList.remove('open');
+}
+
+const CHAT_PICKER_TABS = [
+    { id: 'popular', label: 'Popular' },
+    ...PROVIDER_ORDER.map(p => ({ id: p, label: PROVIDER_INFO[p].name })),
+];
+
+function renderChatPickerTabs() {
+    const el = document.getElementById('chatPickerTabs');
+    el.innerHTML = '';
+    for (const t of CHAT_PICKER_TABS) {
+        const btn = document.createElement('button');
+        btn.className = 'tab-btn' + (t.id === State.chatPickerTab ? ' active' : '');
+        btn.textContent = t.label;
+        btn.addEventListener('click', () => {
+            State.chatPickerTab = t.id;
+            State.chatPickerOrProvider = '';
+            State.chatPickerSearch = '';
+            document.getElementById('chatPickerSearchInput').value = '';
+            renderChatPickerTabs();
+            renderChatPickerGrid();
+            populateChatPickerOrProvider();
+        });
+        el.appendChild(btn);
+    }
+}
+
+function chatPickerModels() {
+    let list;
+    if (State.chatPickerTab === 'popular') {
+        list = MODELS.filter(m => m.popular);
+    } else if (State.chatPickerTab === 'openrouter') {
+        list = OPENROUTER_LIVE.length > 0 ? OPENROUTER_LIVE : MODELS.filter(m => m.provider === 'openrouter');
+        if (State.chatPickerOrProvider) {
+            list = list.filter(m => orProviderOf(m.apiId) === State.chatPickerOrProvider);
+        }
+    } else {
+        list = MODELS.filter(m => m.provider === State.chatPickerTab);
+    }
+    if (State.chatPickerSearch) {
+        const q = State.chatPickerSearch.toLowerCase();
+        list = list.filter(m => m.label.toLowerCase().includes(q) || (m.apiId || '').toLowerCase().includes(q));
+    }
+    return list;
+}
+
+function populateChatPickerOrProvider() {
+    const sel = document.getElementById('chatPickerProviderFilter');
+    if (State.chatPickerTab !== 'openrouter') {
+        sel.style.display = 'none';
+        return;
+    }
+    sel.style.display = '';
+    const providers = orProviderList();
+    const total = OPENROUTER_LIVE.length;
+    sel.innerHTML = ['<option value="">All providers' + (total ? ` (${total})` : '') + '</option>']
+        .concat(providers.map(p => `<option value="${p.id}"${p.id === State.chatPickerOrProvider ? ' selected' : ''}>${p.label} (${p.count})</option>`))
+        .join('');
+}
+
+function renderChatPickerGrid() {
+    const grid = document.getElementById('chatPickerGrid');
+    grid.innerHTML = '';
+    const list = chatPickerModels();
+    if (list.length === 0) {
+        const e = document.createElement('div');
+        e.className = 'model-empty';
+        e.textContent = State.chatPickerSearch ? `No models match "${State.chatPickerSearch}".` : 'No models in this tab.';
+        grid.appendChild(e);
+        return;
+    }
+    const sorted = [...list].sort((a, b) => {
+        const aSel = State.chat.selected.includes(a.id) ? 0 : 1;
+        const bSel = State.chat.selected.includes(b.id) ? 0 : 1;
+        return aSel - bSel;
+    });
+    const MAX = 200;
+    const visible = (sorted.length > MAX && !State.chatPickerSearch) ? sorted.slice(0, MAX) : sorted;
+    for (const m of visible) {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'model-chip';
+        const isSelected = State.chat.selected.includes(m.id);
+        if (isSelected) chip.classList.add('selected');
+        const hasKey = !!State.keys[m.provider];
+        chip.title = `${m.apiId || m.id} · ${m.ctx ? (m.ctx >= 1000 ? Math.round(m.ctx/1000)+'K' : m.ctx) : '?'} ctx`;
+        chip.innerHTML = `
+            <span>${m.label}</span>
+            <span class="provider-pill">${m.provider}</span>
+            ${!hasKey ? '<span class="key-warn" title="Add API key">●</span>' : ''}
+        `;
+        chip.addEventListener('click', () => {
+            if (isSelected) removeChatModel(m.id);
+            else addChatModel(m.id);
+        });
+        grid.appendChild(chip);
+    }
+    if (sorted.length > MAX && !State.chatPickerSearch) {
+        const more = document.createElement('div');
+        more.className = 'model-empty';
+        more.textContent = `…and ${sorted.length - MAX} more. Use search to find a specific model.`;
+        grid.appendChild(more);
+    }
+}
+
+/* ============================================================
    Init
    ============================================================ */
 (function init() {
@@ -2576,6 +3517,65 @@ async function runSynth() {
     if (tp) document.getElementById('paramTopP').value = tp;
     const sm = localStorage.getItem('prompttester_stream');
     if (sm) document.getElementById('paramStream').value = sm;
+
+    /* ===== Chat mode wiring ===== */
+    document.querySelectorAll('.mode-tab').forEach(b => {
+        b.addEventListener('click', () => switchMode(b.dataset.mode));
+    });
+
+    // Chat input behavior
+    const chatInput = document.getElementById('chatInput');
+    const chatSendBtn = document.getElementById('chatSendBtn');
+    chatInput.addEventListener('input', () => {
+        autoResizeChatInput();
+        chatSendBtn.disabled = State.chatStreaming || !chatInput.value.trim() || State.chat.selected.length === 0;
+    });
+    chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey && !e.metaKey && !e.ctrlKey) {
+            e.preventDefault();
+            sendChatMessage();
+        }
+    });
+    chatSendBtn.addEventListener('click', sendChatMessage);
+    document.getElementById('chatStopBtn').addEventListener('click', stopChatAll);
+    document.getElementById('chatClearBtn').addEventListener('click', clearChat);
+
+    // Chat system prompt modal
+    document.getElementById('chatSystemBtn').addEventListener('click', openChatSystemModal);
+    document.getElementById('chatSystemClose').addEventListener('click', closeChatSystemModal);
+    document.getElementById('chatSystemCancel').addEventListener('click', closeChatSystemModal);
+    document.getElementById('chatSystemSave').addEventListener('click', saveChatSystemPrompt);
+    document.getElementById('chatSystemModal').addEventListener('click', (e) => {
+        if (e.target.id === 'chatSystemModal') closeChatSystemModal();
+    });
+
+    // Chat model picker modal
+    document.getElementById('chatAddModelBtn').addEventListener('click', openChatPickerModal);
+    document.getElementById('chatPickerClose').addEventListener('click', closeChatPickerModal);
+    document.getElementById('chatPickerCancel').addEventListener('click', closeChatPickerModal);
+    document.getElementById('chatPickerModal').addEventListener('click', (e) => {
+        if (e.target.id === 'chatPickerModal') closeChatPickerModal();
+    });
+    let chatPickerSearchTimer = null;
+    document.getElementById('chatPickerSearchInput').addEventListener('input', (e) => {
+        const v = e.target.value;
+        clearTimeout(chatPickerSearchTimer);
+        chatPickerSearchTimer = setTimeout(() => {
+            State.chatPickerSearch = v.trim();
+            renderChatPickerGrid();
+        }, 100);
+    });
+    document.getElementById('chatPickerProviderFilter').addEventListener('change', (e) => {
+        State.chatPickerOrProvider = e.target.value;
+        renderChatPickerGrid();
+    });
+
+    // Initial chat render + mode restore
+    renderChatHeader();
+    if (State.mode === 'chat') {
+        // Defer to ensure layout has been computed
+        switchMode('chat');
+    }
 })();
 </script>
 </body>
