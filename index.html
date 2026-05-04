@@ -279,6 +279,11 @@
             margin-bottom: 10px;
         }
         .model-search.visible { display: block; }
+        .model-filter-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
         .model-search-input {
             font-family: var(--font-ui);
             font-size: 13px;
@@ -287,7 +292,15 @@
             border-radius: 6px;
             padding: 8px 12px;
             color: var(--text-primary);
-            width: 100%;
+            flex: 1;
+            min-width: 0;
+        }
+        .model-provider-select {
+            flex: 0 0 200px;
+            cursor: pointer;
+        }
+        @media (max-width: 540px) {
+            .model-provider-select { flex: 1 1 100%; }
         }
         .model-search-input:focus {
             outline: none;
@@ -885,7 +898,12 @@
         </div>
         <div class="model-section-tab" id="modelTabs"></div>
         <div class="model-search" id="modelSearch">
-            <input type="search" id="modelSearchInput" class="model-search-input" placeholder="Search models by name or id…" autocomplete="off">
+            <div class="model-filter-row">
+                <select id="modelProviderFilter" class="model-search-input model-provider-select" aria-label="Filter by provider">
+                    <option value="">All providers</option>
+                </select>
+                <input type="search" id="modelSearchInput" class="model-search-input" placeholder="Search by name or id…" autocomplete="off">
+            </div>
         </div>
         <div class="model-grid" id="modelGrid"></div>
     </section>
@@ -1208,7 +1226,54 @@ const State = {
     runs: new Map(), // model -> {controller, startTime, cardEl, output, ttft}
     activeTab: 'popular',
     search: '',
+    orProvider: '',  // sub-filter for OpenRouter tab — empty = all providers
 };
+
+// Pretty labels for known OpenRouter provider prefixes
+const OR_PROVIDER_LABELS = {
+    'openai': 'OpenAI',
+    'anthropic': 'Anthropic',
+    'google': 'Google',
+    'meta-llama': 'Meta (Llama)',
+    'mistralai': 'Mistral',
+    'deepseek': 'DeepSeek',
+    'x-ai': 'xAI',
+    'cohere': 'Cohere',
+    'perplexity': 'Perplexity',
+    'qwen': 'Qwen (Alibaba)',
+    'nvidia': 'NVIDIA',
+    'microsoft': 'Microsoft',
+    'amazon': 'Amazon',
+    'inflection': 'Inflection',
+    'moonshotai': 'Moonshot',
+    'minimax': 'MiniMax',
+    'nousresearch': 'Nous Research',
+    'thedrummer': 'TheDrummer',
+    'sao10k': 'Sao10K',
+    'gryphe': 'Gryphe',
+    'cognitivecomputations': 'Cognitive Computations',
+    'liquid': 'Liquid',
+    'openrouter': 'OpenRouter',
+    'undi95': 'Undi95',
+    'eva-unit-01': 'EVA',
+    'inception': 'Inception',
+};
+
+function orProviderOf(apiId) {
+    const slash = apiId.indexOf('/');
+    return slash > 0 ? apiId.slice(0, slash) : 'unknown';
+}
+
+function orProviderList() {
+    const counts = {};
+    for (const m of OPENROUTER_LIVE) {
+        const p = orProviderOf(m.apiId);
+        counts[p] = (counts[p] || 0) + 1;
+    }
+    return Object.entries(counts)
+        .sort(([a, ac], [b, bc]) => bc - ac || a.localeCompare(b))
+        .map(([id, count]) => ({ id, label: OR_PROVIDER_LABELS[id] || id, count }));
+}
 
 async function loadOpenRouterModels() {
     try {
@@ -1238,6 +1303,21 @@ async function loadOpenRouterModels() {
 
 function findModel(id) {
     return MODELS.find(m => m.id === id) || OPENROUTER_LIVE.find(m => m.id === id);
+}
+
+function populateOrProviderSelect() {
+    const sel = document.getElementById('modelProviderFilter');
+    const providers = orProviderList();
+    const total = OPENROUTER_LIVE.length;
+    const wantValue = State.orProvider;
+    const optionsHtml = ['<option value="">All providers' + (total ? ` (${total})` : '') + '</option>']
+        .concat(providers.map(p => `<option value="${p.id}"${p.id === wantValue ? ' selected' : ''}>${p.label} (${p.count})</option>`))
+        .join('');
+    if (sel.dataset.signature !== optionsHtml) {
+        sel.innerHTML = optionsHtml;
+        sel.dataset.signature = optionsHtml;
+    }
+    sel.value = wantValue || '';
 }
 
 const saveKeys = () => localStorage.setItem('prompttester_keys', JSON.stringify(State.keys));
@@ -1612,6 +1692,7 @@ function renderTabs() {
         btn.addEventListener('click', () => {
             State.activeTab = t.id;
             State.search = '';
+            State.orProvider = '';
             const inp = document.getElementById('modelSearchInput');
             if (inp) inp.value = '';
             renderTabs();
@@ -1633,6 +1714,9 @@ function modelsForTab() {
         list = MODELS.filter(m => m.popular);
     } else if (State.activeTab === 'openrouter') {
         list = OPENROUTER_LIVE.length > 0 ? OPENROUTER_LIVE : MODELS.filter(m => m.provider === 'openrouter');
+        if (State.orProvider) {
+            list = list.filter(m => orProviderOf(m.apiId) === State.orProvider);
+        }
     } else {
         list = MODELS.filter(m => m.provider === State.activeTab);
     }
@@ -1646,9 +1730,12 @@ function modelsForTab() {
 function renderModels() {
     const grid = document.getElementById('modelGrid');
     const searchWrap = document.getElementById('modelSearch');
+    const providerSelect = document.getElementById('modelProviderFilter');
     const showSearch = State.activeTab === 'openrouter' || State.activeTab === 'all';
     searchWrap.classList.toggle('visible', showSearch);
     grid.classList.toggle('no-scroll', !showSearch);
+    providerSelect.style.display = State.activeTab === 'openrouter' ? '' : 'none';
+    if (State.activeTab === 'openrouter') populateOrProviderSelect();
 
     grid.innerHTML = '';
     const list = modelsForTab();
@@ -2093,6 +2180,11 @@ function clearAllOutputs() {
             State.search = v.trim();
             renderModels();
         }, 100);
+    });
+
+    document.getElementById('modelProviderFilter').addEventListener('change', (e) => {
+        State.orProvider = e.target.value;
+        renderModels();
     });
 
     document.getElementById('keysBtn').addEventListener('click', openKeys);
