@@ -1654,7 +1654,7 @@ async function testKey(provider, list) {
         const ctrl = new AbortController();
         await PROVIDERS[provider].run({
             model, system: '', user: 'Reply with the single word: OK',
-            params: { temp: 0, maxTokens: 5, topP: 1, stream: false },
+            params: { temp: 0, maxTokens: 100, topP: 1, stream: false },
             signal: ctrl.signal,
             onToken: () => { gotToken = true; },
             onUsage: () => {},
