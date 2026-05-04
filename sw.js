@@ -1,4 +1,4 @@
-const CACHE = 'freeprompttester-v1';
+const CACHE = 'freeprompttester-v2';
 const ASSETS = [
     '/',
     '/index.html',

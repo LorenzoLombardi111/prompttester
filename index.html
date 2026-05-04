@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Free AI Prompt Tester Online — freeprompttester.app</title>
-    <meta name="description" content="Run one prompt across GPT, Claude, Gemini, Grok, DeepSeek and more — side by side, in your browser, with your own API keys. Free.">
+    <meta name="description" content="Compare GPT, Claude, Gemini, Grok across 370+ models — side-by-side or in chat, in your browser, with your own API keys. Free.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://freeprompttester.app/">
     <meta name="theme-color" content="#faf9f6">
@@ -12,14 +12,14 @@
     <link rel="manifest" href="/manifest.json">
 
     <meta property="og:title" content="Free AI Prompt Tester Online — freeprompttester.app">
-    <meta property="og:description" content="Run one prompt across GPT, Claude, Gemini, Grok, DeepSeek and more — side by side, in your browser, with your own API keys. Free.">
+    <meta property="og:description" content="Compare GPT, Claude, Gemini, Grok across 370+ models — side-by-side or in chat, in your browser, with your own API keys. Free.">
     <meta property="og:image" content="https://freeprompttester.app/og-image.svg">
     <meta property="og:url" content="https://freeprompttester.app/">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Free AI Prompt Tester Online — freeprompttester.app">
-    <meta name="twitter:description" content="Run one prompt across GPT, Claude, Gemini, Grok, DeepSeek and more — side by side, in your browser, with your own API keys. Free.">
+    <meta name="twitter:description" content="Compare GPT, Claude, Gemini, Grok across 370+ models — side-by-side or in chat, in your browser, with your own API keys. Free.">
     <meta name="twitter:image" content="https://freeprompttester.app/og-image.svg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -51,7 +51,10 @@
             { "@type": "Question", "name": "Is my prompt sent to Freesuite?", "acceptedAnswer": { "@type": "Answer", "text": "No. freeprompttester.app is a static page. Your prompt is sent only to the AI providers you select, directly from your browser. There is no Freesuite server in the request path, no logging, and no analytics on input. You can verify this by watching the Network tab in your browser's developer tools while running a prompt." } },
             { "@type": "Question", "name": "How does freeprompttester.app calculate cost?", "acceptedAnswer": { "@type": "Answer", "text": "After each response finishes, freeprompttester.app reads the input and output token counts returned by the provider and multiplies them by the model's published per-million input and output rates. The cost shown per card is the cost of that single call. The run bar adds them up across all selected models so you can see total spend per run." } },
             { "@type": "Question", "name": "Can I compare more than two models at once?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. freeprompttester.app lets you select up to six models per run. They stream in parallel into a responsive grid (two columns on desktop, one on mobile). Six is the soft cap to keep the UI scannable; for larger sweeps, run two batches and compare the saved JSON exports." } },
-            { "@type": "Question", "name": "Does freeprompttester.app support streaming?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every supported provider streams responses as they generate, and freeprompttester.app renders tokens as they arrive. Time-to-first-token is shown next to each card so you can see how fast each model starts producing output, not just total latency. Streaming can be disabled in settings if you prefer one-shot responses." } }
+            { "@type": "Question", "name": "Does freeprompttester.app support streaming?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Every supported provider streams responses as they generate, and freeprompttester.app renders tokens as they arrive. Time-to-first-token is shown next to each card so you can see how fast each model starts producing output, not just total latency. Streaming can be disabled in settings if you prefer one-shot responses." } },
+            { "@type": "Question", "name": "Does freeprompttester.app support multi-turn chat?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. freeprompttester.app has a Chat mode where you can hold a parallel multi-turn conversation with up to three models simultaneously. Each model maintains its own conversation history, so the same user message can produce divergent threads as turns accumulate. The shared input bar broadcasts every message to all selected models, and per-column footers show cumulative cost and token usage as the conversation grows." } },
+            { "@type": "Question", "name": "What is the Synthesize feature?", "acceptedAnswer": { "@type": "Answer", "text": "After running the same prompt across multiple models, click the ✦ Synthesize button to send all completed responses to a single chosen model. That model produces one combined answer plus a consensus section (where models agreed) and a disagreements section (where they diverged). It is useful for boiling down a multi-model run into one decision-ready output, with the agreement and uncertainty made explicit." } },
+            { "@type": "Question", "name": "How many AI models can I access through freeprompttester.app?", "acceptedAnswer": { "@type": "Answer", "text": "freeprompttester.app exposes 25+ curated models across 8 providers via direct browser calls, plus the entire OpenRouter catalog of 370+ models with live pricing. The OpenRouter tab includes a provider sub-filter (Anthropic, OpenAI, Meta, Google, Mistral, DeepSeek, xAI, Qwen, Cohere, Perplexity, NVIDIA, MiniMax, and 50 more) and a search box to find any specific model by name or id." } }
         ]
     }
     </script>
@@ -1508,7 +1511,9 @@
 <div class="seo-content">
     <h1>AI Prompt Tester — Compare GPT, Claude, Gemini and More Side by Side</h1>
 
-    <p>freeprompttester.app is a free, browser-based playground for running the same prompt across multiple AI models in parallel. You paste your own API keys for the providers you want to test, write a system and user prompt, pick up to six models from any combination of OpenAI (via OpenRouter), Anthropic, Google, xAI, Mistral, DeepSeek, Cohere and Groq, and watch each provider stream its response into its own card with time-to-first-token, total latency, token usage and per-call cost shown live.</p>
+    <p>freeprompttester.app is a free, browser-based playground for running the same prompt across multiple AI models in parallel. You paste your own API keys for the providers you want to test, write a system and user prompt, pick up to six models from any combination of OpenAI (via OpenRouter), Anthropic, Google, xAI, Mistral, DeepSeek, Cohere and Groq, and watch each provider stream its response into its own card with time-to-first-token, total latency, token usage and per-call cost shown live. The OpenRouter tab also exposes the entire live catalog of 370+ models with provider sub-filtering and search.</p>
+
+    <p>freeprompttester.app supports two modes. <strong>Single-shot mode</strong> runs one prompt across up to six models in parallel and lets you click ✦ Synthesize to merge the completed responses into one combined answer with consensus and disagreement notes. <strong>Chat mode</strong> holds a parallel multi-turn conversation with up to three models, each maintaining its own history — the same user message produces divergent threads as turns accumulate, with cumulative cost shown per column.</p>
 
     <p>Everything runs client-side. Your prompts and API keys are sent directly from your browser to each provider. No proxy server, no Freesuite middleman, no logging — you can verify it in the Network tab in your browser's developer tools.</p>
 
@@ -1552,8 +1557,10 @@
     <div class="feature-grid">
         <div class="feature-card"><h3>Bring your own keys</h3><p>One key per provider. They live in localStorage, never on a server.</p></div>
         <div class="feature-card"><h3>True parallel runs</h3><p>Up to six models stream side by side. See TTFT, latency, tokens and cost.</p></div>
+        <div class="feature-card"><h3>Multi-turn chat mode</h3><p>Parallel conversation across up to 3 models, each with its own history.</p></div>
+        <div class="feature-card"><h3>✦ Synthesize</h3><p>Combine multi-model responses into one answer with consensus and disagreements.</p></div>
+        <div class="feature-card"><h3>370+ OpenRouter models</h3><p>Live catalog with provider sub-filter and search. New models appear automatically.</p></div>
         <div class="feature-card"><h3>No proxy, no logging</h3><p>Static HTML page. Calls go browser → provider directly.</p></div>
-        <div class="feature-card"><h3>Honest about OpenAI</h3><p>OpenAI blocks browser calls. We say so and route GPT through OpenRouter.</p></div>
     </div>
 
     <h2>How it works</h2>
@@ -1602,6 +1609,21 @@
     <details>
         <summary>Does freeprompttester.app support streaming?</summary>
         <p>Yes. Every supported provider streams responses as they generate, and freeprompttester.app renders tokens as they arrive. Time-to-first-token is shown next to each card so you can see how fast each model starts producing output, not just total latency. Streaming can be disabled in settings if you prefer one-shot responses.</p>
+    </details>
+
+    <details>
+        <summary>Does freeprompttester.app support multi-turn chat?</summary>
+        <p>Yes. freeprompttester.app has a Chat mode where you can hold a parallel multi-turn conversation with up to three models simultaneously. Each model maintains its own conversation history, so the same user message can produce divergent threads as turns accumulate. The shared input bar broadcasts every message to all selected models, and per-column footers show cumulative cost and token usage as the conversation grows.</p>
+    </details>
+
+    <details>
+        <summary>What is the Synthesize feature?</summary>
+        <p>After running the same prompt across multiple models, click the ✦ Synthesize button to send all completed responses to a single chosen model. That model produces one combined answer plus a consensus section (where models agreed) and a disagreements section (where they diverged). It is useful for boiling down a multi-model run into one decision-ready output, with the agreement and uncertainty made explicit.</p>
+    </details>
+
+    <details>
+        <summary>How many AI models can I access through freeprompttester.app?</summary>
+        <p>freeprompttester.app exposes 25+ curated models across 8 providers via direct browser calls, plus the entire OpenRouter catalog of 370+ models with live pricing. The OpenRouter tab includes a provider sub-filter (Anthropic, OpenAI, Meta, Google, Mistral, DeepSeek, xAI, Qwen, Cohere, Perplexity, NVIDIA, MiniMax, and 50 more) and a search box to find any specific model by name or id.</p>
     </details>
 </div>
 

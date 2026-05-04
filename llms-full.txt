@@ -1,6 +1,6 @@
 # freeprompttester.app — Full text
 
-> Free, browser-based AI prompt tester. Run the same prompt across GPT, Claude, Gemini, Grok, DeepSeek, Mistral, Cohere and Groq-hosted Llama in parallel — side by side — using your own API keys. Streams every response with live latency, token usage and per-call cost. Static page, no proxy, keys never leave the browser.
+> Free, browser-based AI prompt tester. Two modes: single-shot multi-model comparison (up to 6 models in parallel, optional ✦ Synthesize to merge responses), and chat mode (parallel multi-turn conversation with up to 3 models, each maintaining its own history). Supports 25+ curated models across 8 providers via direct browser calls plus the entire OpenRouter live catalog (370+ models). Static page, no proxy, keys never leave the browser.
 
 ---
 
@@ -8,9 +8,19 @@
 
 ### AI Prompt Tester — Compare GPT, Claude, Gemini and More Side by Side
 
-freeprompttester.app is a free, browser-based playground for running the same prompt across multiple AI models in parallel. You paste your own API keys for the providers you want to test, write a system and user prompt, pick up to six models from any combination of OpenAI (via OpenRouter), Anthropic, Google, xAI, Mistral, DeepSeek, Cohere and Groq, and watch each provider stream its response into its own card with time-to-first-token, total latency, token usage and per-call cost shown live.
+freeprompttester.app is a free, browser-based playground for running the same prompt across multiple AI models in parallel. You paste your own API keys for the providers you want to test, write a system and user prompt, pick up to six models from any combination of OpenAI (via OpenRouter), Anthropic, Google, xAI, Mistral, DeepSeek, Cohere and Groq, and watch each provider stream its response into its own card with time-to-first-token, total latency, token usage and per-call cost shown live. The OpenRouter tab also exposes the entire live catalog of 370+ models with provider sub-filtering and search.
+
+freeprompttester.app supports two modes. Single-shot mode runs one prompt across up to six models in parallel and lets you click ✦ Synthesize to merge the completed responses into one combined answer with consensus and disagreement notes. Chat mode holds a parallel multi-turn conversation with up to three models, each maintaining its own history — the same user message produces divergent threads as turns accumulate, with cumulative cost shown per column.
 
 Everything runs client-side. Your prompts and API keys are sent directly from your browser to each provider. No proxy server, no Freesuite middleman, no logging — you can verify it in the Network tab in your browser's developer tools.
+
+### Chat mode
+
+Chat mode is a parallel multi-turn playground. You pick up to three models from the chat-specific picker (which surfaces the same 25+ curated models plus the full OpenRouter catalog), set a system prompt that personalizes all of them, and send a single user message that gets broadcast to every selected column simultaneously. Each model maintains its own conversation history, so over time the threads can diverge — useful for evaluating how different models stay in character, handle refusals, recover from "I changed my mind", or carry through long multi-step instructions. Cumulative cost grows quadratically with turns (each turn re-sends the entire prior history as input), and freeprompttester.app shows that growth live so you can see when a chat is getting expensive. Chat history persists in localStorage; refreshing the page resumes the conversation.
+
+### ✦ Synthesize
+
+After running a prompt against multiple models in single-shot mode, the ✦ Synthesize button (enabled once at least two cards have completed) sends every response to a single chosen synthesizer model. The synthesizer reads all the outputs and produces three sections: a synthesized best-of answer, a list of points where the models agreed (consensus = high confidence), and a list of disagreements (with which side seems more correct). The synthesis card renders full-width at the top of the results grid with a gold border and ✦ badge. The default synthesis instruction can be customized in the modal. Cost-wise, synthesizing four medium-length responses through Claude Opus 4.7 typically runs around $0.04. Reasoning models used as synthesizers (GPT-5, o-series, DeepSeek R1) automatically receive temperature 1 to satisfy their parameter constraints.
 
 ### How does freeprompttester.app compare AI models?
 
