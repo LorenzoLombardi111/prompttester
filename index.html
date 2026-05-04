@@ -274,10 +274,39 @@
         }
 
         /* Model picker */
+        .model-search {
+            display: none;
+            margin-bottom: 10px;
+        }
+        .model-search.visible { display: block; }
+        .model-search-input {
+            font-family: var(--font-ui);
+            font-size: 13px;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: var(--text-primary);
+            width: 100%;
+        }
+        .model-search-input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(196,154,42,0.12);
+        }
         .model-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 6px;
+            max-height: 380px;
+            overflow-y: auto;
+        }
+        .model-grid.no-scroll { max-height: none; overflow: visible; }
+        .model-empty {
+            font-family: var(--font-ui);
+            font-size: 12px;
+            color: var(--text-muted);
+            padding: 12px;
         }
         .model-chip {
             font-family: var(--font-ui);
@@ -855,6 +884,9 @@
             <span class="panel-meta">Direct browser calls + OpenRouter for OpenAI</span>
         </div>
         <div class="model-section-tab" id="modelTabs"></div>
+        <div class="model-search" id="modelSearch">
+            <input type="search" id="modelSearchInput" class="model-search-input" placeholder="Search models by name or id…" autocomplete="off">
+        </div>
         <div class="model-grid" id="modelGrid"></div>
     </section>
 
@@ -1164,6 +1196,9 @@ const PROVIDER_INFO = {
 
 const PROVIDER_ORDER = ['anthropic', 'google', 'xai', 'mistral', 'deepseek', 'groq', 'cohere', 'openrouter'];
 
+// Populated at runtime from OpenRouter's /api/v1/models endpoint
+let OPENROUTER_LIVE = [];
+
 /* ============================================================
    STATE
    ============================================================ */
@@ -1172,7 +1207,38 @@ const State = {
     selected: JSON.parse(localStorage.getItem('prompttester_models') || 'null') || ['anthropic:claude-opus-4-5', 'openrouter:openai/gpt-5', 'google:gemini-2.5-pro', 'xai:grok-4'],
     runs: new Map(), // model -> {controller, startTime, cardEl, output, ttft}
     activeTab: 'popular',
+    search: '',
 };
+
+async function loadOpenRouterModels() {
+    try {
+        const res = await fetch('https://openrouter.ai/api/v1/models');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!Array.isArray(data?.data)) return;
+        OPENROUTER_LIVE = data.data
+            .filter(m => m && m.id && m.context_length)
+            .map(m => {
+                const p = m.pricing || {};
+                return {
+                    id: 'openrouter:' + m.id,
+                    apiId: m.id,
+                    label: m.name || m.id,
+                    provider: 'openrouter',
+                    ctx: m.context_length,
+                    priceIn: parseFloat(p.prompt || '0') * 1e6,
+                    priceOut: parseFloat(p.completion || '0') * 1e6,
+                    popular: false,
+                };
+            })
+            .sort((a, b) => a.label.localeCompare(b.label));
+        if (State.activeTab === 'openrouter' || State.activeTab === 'all') renderModels();
+    } catch {}
+}
+
+function findModel(id) {
+    return MODELS.find(m => m.id === id) || OPENROUTER_LIVE.find(m => m.id === id);
+}
 
 const saveKeys = () => localStorage.setItem('prompttester_keys', JSON.stringify(State.keys));
 const saveSelected = () => localStorage.setItem('prompttester_models', JSON.stringify(State.selected));
@@ -1545,6 +1611,9 @@ function renderTabs() {
         btn.textContent = t.label;
         btn.addEventListener('click', () => {
             State.activeTab = t.id;
+            State.search = '';
+            const inp = document.getElementById('modelSearchInput');
+            if (inp) inp.value = '';
             renderTabs();
             renderModels();
         });
@@ -1553,32 +1622,82 @@ function renderTabs() {
 }
 
 function modelsForTab() {
-    if (State.activeTab === 'all') return MODELS;
-    if (State.activeTab === 'popular') return MODELS.filter(m => m.popular);
-    return MODELS.filter(m => m.provider === State.activeTab);
+    let list;
+    if (State.activeTab === 'all') {
+        const seen = new Set();
+        list = [];
+        for (const m of [...MODELS, ...OPENROUTER_LIVE]) {
+            if (!seen.has(m.id)) { seen.add(m.id); list.push(m); }
+        }
+    } else if (State.activeTab === 'popular') {
+        list = MODELS.filter(m => m.popular);
+    } else if (State.activeTab === 'openrouter') {
+        list = OPENROUTER_LIVE.length > 0 ? OPENROUTER_LIVE : MODELS.filter(m => m.provider === 'openrouter');
+    } else {
+        list = MODELS.filter(m => m.provider === State.activeTab);
+    }
+    if (State.search) {
+        const q = State.search.toLowerCase();
+        list = list.filter(m => m.label.toLowerCase().includes(q) || (m.apiId || '').toLowerCase().includes(q));
+    }
+    return list;
 }
 
 function renderModels() {
     const grid = document.getElementById('modelGrid');
+    const searchWrap = document.getElementById('modelSearch');
+    const showSearch = State.activeTab === 'openrouter' || State.activeTab === 'all';
+    searchWrap.classList.toggle('visible', showSearch);
+    grid.classList.toggle('no-scroll', !showSearch);
+
     grid.innerHTML = '';
     const list = modelsForTab();
-    for (const m of list) {
-        const chip = document.createElement('button');
-        chip.type = 'button';
-        chip.className = 'model-chip';
-        const isSelected = State.selected.includes(m.id);
-        if (isSelected) chip.classList.add('selected');
-        const hasKey = !!State.keys[m.provider];
-        chip.innerHTML = `
-            <span>${m.label}</span>
-            <span class="provider-pill">${m.provider}</span>
-            ${!hasKey ? '<span class="key-warn" title="Add API key">●</span>' : ''}
-        `;
-        chip.addEventListener('click', () => toggleModel(m.id));
-        grid.appendChild(chip);
+    if (list.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'model-empty';
+        empty.textContent = State.search ? `No models match "${State.search}".` : (State.activeTab === 'openrouter' ? 'Loading OpenRouter models…' : 'No models in this tab.');
+        grid.appendChild(empty);
+    } else {
+        // Sort selected first within the displayed list
+        const sorted = [...list].sort((a, b) => {
+            const aSel = State.selected.includes(a.id) ? 0 : 1;
+            const bSel = State.selected.includes(b.id) ? 0 : 1;
+            return aSel - bSel;
+        });
+        const MAX_VISIBLE = 200;
+        const truncated = sorted.length > MAX_VISIBLE && !State.search;
+        const visible = truncated ? sorted.slice(0, MAX_VISIBLE) : sorted;
+        for (const m of visible) {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'model-chip';
+            const isSelected = State.selected.includes(m.id);
+            if (isSelected) chip.classList.add('selected');
+            const hasKey = !!State.keys[m.provider];
+            const priceStr = (m.priceIn || m.priceOut)
+                ? `$${(m.priceIn || 0).toFixed(2)}/$${(m.priceOut || 0).toFixed(2)} per M`
+                : 'free';
+            chip.title = `${m.apiId || m.id} · ${m.ctx ? (m.ctx >= 1000 ? Math.round(m.ctx/1000)+'K' : m.ctx) : '?'} ctx · ${priceStr}`;
+            chip.innerHTML = `
+                <span>${m.label}</span>
+                <span class="provider-pill">${m.provider}</span>
+                ${!hasKey ? '<span class="key-warn" title="Add API key">●</span>' : ''}
+            `;
+            chip.addEventListener('click', () => toggleModel(m.id));
+            grid.appendChild(chip);
+        }
+        if (truncated) {
+            const more = document.createElement('div');
+            more.className = 'model-empty';
+            more.textContent = `…and ${sorted.length - MAX_VISIBLE} more. Use search to find a specific model.`;
+            grid.appendChild(more);
+        }
     }
     document.getElementById('selectedCount').textContent = State.selected.length;
-    document.getElementById('modelCount').textContent = `${State.selected.length} selected · max 6`;
+    const totalNote = State.activeTab === 'openrouter' && OPENROUTER_LIVE.length
+        ? `${State.selected.length} selected · max 6 · ${OPENROUTER_LIVE.length} OpenRouter models`
+        : `${State.selected.length} selected · max 6`;
+    document.getElementById('modelCount').textContent = totalNote;
 }
 
 function toggleModel(id) {
@@ -1767,7 +1886,7 @@ function stopCard(modelId) {
 }
 
 function regenCard(modelId) {
-    const m = MODELS.find(x => x.id === modelId);
+    const m = findModel(modelId);
     if (!m) return;
     runOne(m);
 }
@@ -1891,7 +2010,7 @@ async function runAll() {
     document.getElementById('runBtn').disabled = true;
     document.getElementById('stopBtn').disabled = false;
 
-    const models = State.selected.map(id => MODELS.find(m => m.id === id)).filter(Boolean);
+    const models = State.selected.map(findModel).filter(Boolean);
     await Promise.allSettled(models.map(m => runOne(m)));
 
     document.getElementById('runStatus').textContent = '';
@@ -1964,6 +2083,17 @@ function clearAllOutputs() {
     updateKeyCount();
     restoreLastPrompt();
     updatePromptMeta();
+    loadOpenRouterModels();
+
+    let searchTimer = null;
+    document.getElementById('modelSearchInput').addEventListener('input', (e) => {
+        const v = e.target.value;
+        clearTimeout(searchTimer);
+        searchTimer = setTimeout(() => {
+            State.search = v.trim();
+            renderModels();
+        }, 100);
+    });
 
     document.getElementById('keysBtn').addEventListener('click', openKeys);
     document.getElementById('keysClose').addEventListener('click', closeKeys);
